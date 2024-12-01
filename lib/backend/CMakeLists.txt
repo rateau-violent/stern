@@ -1,6 +1,5 @@
 add_library(backend STATIC
     include/backend/controller_base.h
-    include/backend/route.h
 )
 
 target_link_libraries(backend

@@ -6,6 +6,7 @@ namespace http {
         GET,
         POST,
         PUT,
+        DELETE
     };
 }
 
