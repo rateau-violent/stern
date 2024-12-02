@@ -5,10 +5,4 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_subdirectory(lib)
 
-add_executable(backend_cpp
-        main.cpp
-)
-
-target_link_libraries(backend_cpp
-    backend
-)
+add_subdirectory(example)
