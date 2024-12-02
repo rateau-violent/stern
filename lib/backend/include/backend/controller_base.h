@@ -5,34 +5,27 @@
 #include <unordered_map>
 #include <optional>
 #include <typeindex>
-#include <concepts>
+
+#include "concepts.h"
 
 namespace backend {
-
-    template<typename T>
-    concept Module = requires(T t) {
-        typename T::request_type;
-        typename T::response_type;
-        typename T::method_type;
-
-        T::request_type::path;
-        std::same_as<decltype(std::declval<typename T::request_type>().path), std::string>;
-
-        T::request_type::method;
-        std::same_as<decltype(std::declval<typename T::request_type>().method), typename T::method_type>;
-    };
-
-    template <Module M, typename Route>
+    template <Framework F, typename Route>
     class controller_base {
-        using request_type = typename M::request_type;
-        using response_type = typename M::response_type;
-        using method_type = typename M::method_type;
+        using request_type = typename F::request_type;
+        using response_type = typename F::response_type;
+        using method_type = typename F::method_type;
 
         using route_tuple = std::tuple<std::string, method_type, Route>;
 
         public:
             explicit controller_base(const std::string& prefix = ""): _prefix{prefix} {
             }
+
+            controller_base(const controller_base &other) = default;
+            controller_base(controller_base &&other) = default;
+
+            controller_base& operator=(const controller_base&) = default;
+            controller_base& operator=(controller_base&&) = default;
 
             virtual ~controller_base() = default;
 
