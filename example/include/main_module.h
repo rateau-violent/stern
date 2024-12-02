@@ -4,7 +4,7 @@
 #include "utils.h"
 
 namespace example {
-    class main_module: public backend::module_base<HttpFramework, route> {
+    class main_module: public module {
         public:
             main_module();
     };

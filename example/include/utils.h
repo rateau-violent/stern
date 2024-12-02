@@ -11,17 +11,13 @@
 #include <backend/controller_base.h>
 #include <backend/module_base.h>
 
-namespace example {
-    struct HttpFramework {
-        using method_type = http::methods;
-        using response_type = http::response;
-        using request_type = http::request;
-    };
+#include "http/framework.h"
 
+namespace example {
     using route = std::function<http::response (http::request)>;
-    using controller = backend::controller_base<HttpFramework, route>;
+    using controller = backend::controller_base<http::framework, route>;
     using controller_container = std::vector<std::unique_ptr<controller>>;
-    using module = backend::module_base<HttpFramework, route>;
+    using module = backend::module_base<http::framework, route>;
 }
 
 #endif /* !EXAMPLE_UTILS_H */

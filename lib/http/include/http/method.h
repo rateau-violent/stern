@@ -4,10 +4,19 @@
 namespace http {
     enum class methods {
         GET,
+        HEAD,
         POST,
         PUT,
-        DELETE
+        DELETE,
+        CONNECT,
+        OPTIONS,
+        TRACE,
+        PATCH
     };
+}
+
+namespace std {
+    string to_string(http::methods);
 }
 
 #endif /* !HTTP_METHOD_H */

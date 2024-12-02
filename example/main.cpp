@@ -20,14 +20,14 @@ http::request get_request() {
   return requests[req];
 }
 
-void start_server(backend::module_base<example::HttpFramework, example::route>& m_module) {
+void start_server(backend::module_base<http::framework, example::route>& m_module) {
   srand(time(nullptr));
 
   for (std::size_t i = 0; i < 15; ++i) {
     try {
       auto req = get_request();
 
-      std::cout << "RECEIVED REQUEST: " << (int)(req.method) << " " << req.path << std::endl;
+      std::cout << "RECEIVED REQUEST: " << std::to_string(req.method) << " " << req.path << std::endl;
 
       auto res = m_module(req);
 
