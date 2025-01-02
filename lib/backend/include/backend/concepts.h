@@ -4,6 +4,9 @@
 #include <concepts>
 
 namespace backend {
+    /**
+     * @brief Defines the types required by the backend module
+     */
     template<typename T>
     concept Framework = requires(T t) {
         typename T::request_type;
