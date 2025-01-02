@@ -3,6 +3,7 @@ add_library(backend STATIC
     include/backend/controller_base.h
     include/backend/concepts.h
     include/backend/module_base.h
+    include/backend/server.h
 )
 
 target_link_libraries(backend
