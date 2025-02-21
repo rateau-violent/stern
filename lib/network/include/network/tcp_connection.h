@@ -26,7 +26,9 @@ namespace network {
             /**
             * @brief Listens on the connection
             */
-            void listen();
+            void listen(std::function<void (const std::string&)> request_handler);
+
+            void send(const std::string& response);
 
         private:
             asio::ip::tcp::socket _socket;
@@ -34,8 +36,7 @@ namespace network {
 
             explicit tcp_connection(asio::io_context& io_context);
 
-            void _handle_request(const std::error_code& error_code, std::size_t bytes_read);
-            void _handle_response();
+            void _handle_request(const std::error_code& error_code, std::size_t bytes_read, std::function<void (const std::string&)> request_handler);
 
             void _after_response(const std::error_code& error_code, std::size_t bytes_sent);
 

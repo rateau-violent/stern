@@ -9,10 +9,11 @@
 
 
 namespace network {
-    tcp_server::tcp_server(std::size_t port):
+    tcp_server::tcp_server(std::size_t port, std::function<void (std::shared_ptr<tcp_connection>, const std::string&)>  request_handler):
         _port{port},
         _ctx{},
-        _acceptor{_ctx, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), _port)} {
+        _acceptor{_ctx, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), _port)},
+        _request_handler{std::move(request_handler)} {
     }
 
     void tcp_server::start() {
@@ -38,8 +39,9 @@ namespace network {
 
     void tcp_server::_handle_accept(std::shared_ptr<tcp_connection> new_connection, const std::error_code& error_code) {
         if (!error_code) {
-            std::cout << "new connection received" << std::endl;
-            new_connection->listen();
+            new_connection->listen([new_connection, this](const std::string& data) {
+                _request_handler(new_connection, data);
+            });
         }
         _start_accept();
     }

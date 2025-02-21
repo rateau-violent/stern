@@ -7,6 +7,11 @@
 
 namespace http {
     struct request {
+        request(const std::string&) {
+            path = "";
+            method = http::methods::GET;
+        }
+
         std::string path;
         methods method;
     };

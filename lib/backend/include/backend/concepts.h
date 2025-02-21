@@ -16,6 +16,8 @@ namespace backend {
         T::request_type::path;
         std::same_as<decltype(std::declval<typename T::request_type>().path), std::string>;
 
+        std::is_constructible_v<typename T::request_type, std::string>;
+
         T::request_type::method;
         std::same_as<decltype(std::declval<typename T::request_type>().method), typename T::method_type>;
     };

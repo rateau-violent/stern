@@ -24,7 +24,9 @@ namespace backend {
             explicit server(std::size_t port, module_type&& main_module):
                 _port{port},
                 _main_module{std::move(main_module)},
-                _tcp_server{port} {
+                _tcp_server{port, [this](std::shared_ptr<network::tcp_connection> c, const std::string& data) {
+                    _request_handler(c, data);
+                }} {
             }
 
             void start() {
@@ -57,7 +59,7 @@ namespace backend {
             network::tcp_server _tcp_server;
             std::thread _network_thread;
 
-            std::atomic<std::queue<request_type>> _requests;
+            // std::atomic<std::queue<request_type>> _requests;
 
             static inline bool _running = true;
 
@@ -65,16 +67,28 @@ namespace backend {
                 std::cout << "=================" << std::endl << "SERVER IS RUNNING" << std::endl << "=================" << std::endl;
 
                 while (_running) {
-                    if (!_requests.empty()) {
-                        auto request = _requests.front();
-
-                        _requests.pop_front();
-                    } else {
+                    // if (!_requests.empty()) {
+                    //     auto request = _requests.front();
+                    //
+                    //     _requests.pop_front();
+                    // } else {
                         std::this_thread::yield();
-                    }
+                    // }
                 }
 
                 stop();
+            }
+
+            void _request_handler(std::shared_ptr<network::tcp_connection> c, const std::string& data) {
+                std::cout << "----------\n" <<  data << std::endl;
+                request_type r(data);
+
+                auto res = _main_module(r);
+
+                c->send("HTTP/1.0 200 OK\r\n"
+                    "Content-Type: text/html; charset=UTF-8\r\n"
+                    "Content-Length: 4\r\n\r\n"
+                    "OK\r\n");
             }
 
             request_type _get_request() {
