@@ -4,7 +4,7 @@
 #include <functional>
 #include <memory>
 
-#include <http/method.h>
+#include <http/methods.h>
 #include <http/response.h>
 #include <http/request.h>
 

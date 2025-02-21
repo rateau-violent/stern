@@ -13,6 +13,8 @@ namespace http {
         TRACE,
         PATCH
     };
+
+    methods to_method(const std::string&);
 }
 
 namespace std {

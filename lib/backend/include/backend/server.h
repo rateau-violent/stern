@@ -77,10 +77,17 @@ namespace backend {
 
                 auto res = _main_module(r);
 
-                c->send("HTTP/1.0 200 OK\r\n"
-                    "Content-Type: text/html; charset=UTF-8\r\n"
-                    "Content-Length: 4\r\n\r\n"
-                    "OK\r\n");
+                if (!res) {
+                    c->send("HTTP/1.0 404 NOT FOUND\r\n"
+                        "Content-Type: text/html; charset=UTF-8\r\n"
+                        "Content-Length: 11\r\n\r\n"
+                        "NOT FOUND\r\n");
+                } else {
+                    c->send("HTTP/1.0 200 OK\r\n"
+                        "Content-Type: text/html; charset=UTF-8\r\n"
+                        "Content-Length: 4\r\n\r\n"
+                        "OK\r\n");
+                }
             }
 
             static void signal_handler(int) {

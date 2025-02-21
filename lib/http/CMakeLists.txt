@@ -2,12 +2,13 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_library(http STATIC
     include/http/framework.h
-    include/http/method.h
-    include/http/request.h
     include/http/response.h
     include/http/status.h
 
-    src/method.cpp
+    src/methods.cpp
+    src/request.cpp
+    src/versions.cpp
+    src/utils/string_helper.cpp
 )
 
 target_include_directories(http PUBLIC

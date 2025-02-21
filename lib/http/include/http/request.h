@@ -2,18 +2,19 @@
 #define HTTP_REQUEST_H
 
 #include <string>
+#include <unordered_map>
 
-#include "method.h"
+#include "methods.h"
+#include "versions.h"
 
 namespace http {
     struct request {
-        request(const std::string&) {
-            path = "";
-            method = http::methods::GET;
-        }
+        request(const std::string&);
 
+        http::versions version;
         std::string path;
         methods method;
+        std::unordered_map<std::string, std::string> headers;
     };
 }
 
