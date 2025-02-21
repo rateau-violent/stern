@@ -59,21 +59,13 @@ namespace backend {
             network::tcp_server _tcp_server;
             std::thread _network_thread;
 
-            // std::atomic<std::queue<request_type>> _requests;
-
             static inline bool _running = true;
 
             void _run() {
                 std::cout << "=================" << std::endl << "SERVER IS RUNNING" << std::endl << "=================" << std::endl;
 
                 while (_running) {
-                    // if (!_requests.empty()) {
-                    //     auto request = _requests.front();
-                    //
-                    //     _requests.pop_front();
-                    // } else {
-                        std::this_thread::yield();
-                    // }
+                    std::this_thread::yield();
                 }
 
                 stop();
@@ -89,21 +81,6 @@ namespace backend {
                     "Content-Type: text/html; charset=UTF-8\r\n"
                     "Content-Length: 4\r\n\r\n"
                     "OK\r\n");
-            }
-
-            request_type _get_request() {
-                // temporary implementation
-                static const std::vector<http::request> requests{
-                    {"/users", http::methods::POST },
-                    {"/users", http::methods::PUT },
-                    {"/users", http::methods::GET },
-                    {"/users", http::methods::DELETE },
-                    {"/", http::methods::GET },
-                    {"/", http::methods::POST }
-                };
-                std::size_t req = std::rand() % requests.size();
-
-                return requests[req];
             }
 
             static void signal_handler(int) {
