@@ -5,6 +5,10 @@
 #include "module_base.h"
 
 #include <iostream>
+#include <thread>
+#include <csignal>
+#include <queue>
+
 #include <network/tcp_server.h>
 
 namespace backend {
@@ -17,52 +21,60 @@ namespace backend {
         using method_type = typename F::method_type;
 
         public:
-            explicit server(std::size_t port, module_type&& main_module): _port{port}, _main_module{std::move(main_module)} {
-
+            explicit server(std::size_t port, module_type&& main_module):
+                _port{port},
+                _main_module{std::move(main_module)},
+                _tcp_server{port} {
             }
 
             void start() {
-                // temporary implementation
                 std::cout << "===============" << std::endl;
                 std::cout << "STARTING SERVER" << std::endl;
                 std::cout << "===============" << std::endl;
-
                 std::cout << "PORT=" << _port << std::endl;
-                srand(time(nullptr));
-                sleep(2);
+                signal(SIGINT, server::signal_handler);
+
+                _running = true;
+                _network_thread = std::thread([this] () -> void {
+                    _tcp_server.start();
+                });
                 std::cout << "Done!" << std::endl;
                 _run();
             }
+
+            void stop() {
+                std::cout << "=== STOPPING SERVER ===" << std::endl;
+                _tcp_server.stop();
+                if (_network_thread.joinable()) {
+                    _network_thread.join();
+                }
+                std::cout << "Done!" << std::endl;
+            }
+
         private:
             std::size_t _port;
             module_type _main_module;
+            network::tcp_server _tcp_server;
+            std::thread _network_thread;
+
+            std::atomic<std::queue<request_type>> _requests;
+
+            static inline bool _running = true;
 
             void _run() {
-                network::tcp_server server(_port);
-                server.start();
-                std::cout << "=================" << std::endl;
-                std::cout << "SERVER IS RUNNING" << std::endl;
-                std::cout << "=================" << std::endl;
+                std::cout << "=================" << std::endl << "SERVER IS RUNNING" << std::endl << "=================" << std::endl;
 
-                // for (std::size_t i = 0; i < 15; ++i) {
-                //     try {
-                //         sleep(1);
-                //         auto req = _get_request();
-                //
-                //         std::cout << "RECEIVED REQUEST: " << std::to_string(req.method) << " " << req.path << std::endl;
-                //
-                //         auto res = _main_module(req);
-                //
-                //         if (res == std::nullopt) {
-                //             std::cout << "404 Not found" << std::endl;
-                //         } else {
-                //             std::cout << "OK" << std::endl;
-                //         }
-                //         std::cout << "----------" << std::endl;
-                //     } catch (const std::exception& e) {
-                //         std::cerr << "ERROR: " << e.what() << std::endl;
-                //     }
-                // }
+                while (_running) {
+                    if (!_requests.empty()) {
+                        auto request = _requests.front();
+
+                        _requests.pop_front();
+                    } else {
+                        std::this_thread::yield();
+                    }
+                }
+
+                stop();
             }
 
             request_type _get_request() {
@@ -78,6 +90,10 @@ namespace backend {
                 std::size_t req = std::rand() % requests.size();
 
                 return requests[req];
+            }
+
+            static void signal_handler(int) {
+                _running = false;
             }
     };
 }
