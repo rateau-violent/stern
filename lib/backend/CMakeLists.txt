@@ -6,11 +6,10 @@ add_library(backend STATIC
     include/backend/server.h
 )
 
-find_package(asio REQUIRED)
 
 target_link_libraries(backend
     http
-    asio::asio
+    network
 )
 
 target_include_directories(backend PUBLIC

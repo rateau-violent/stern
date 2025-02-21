@@ -5,6 +5,7 @@
 #include "module_base.h"
 
 #include <iostream>
+#include <network/tcp_server.h>
 
 namespace backend {
     template <Framework F, typename Route>
@@ -37,29 +38,31 @@ namespace backend {
             module_type _main_module;
 
             void _run() {
+                network::tcp_server server(_port);
+                server.start();
                 std::cout << "=================" << std::endl;
                 std::cout << "SERVER IS RUNNING" << std::endl;
                 std::cout << "=================" << std::endl;
 
-                for (std::size_t i = 0; i < 15; ++i) {
-                    try {
-                        sleep(1);
-                        auto req = _get_request();
-
-                        std::cout << "RECEIVED REQUEST: " << std::to_string(req.method) << " " << req.path << std::endl;
-
-                        auto res = _main_module(req);
-
-                        if (res == std::nullopt) {
-                            std::cout << "404 Not found" << std::endl;
-                        } else {
-                            std::cout << "OK" << std::endl;
-                        }
-                        std::cout << "----------" << std::endl;
-                    } catch (const std::exception& e) {
-                        std::cerr << "ERROR: " << e.what() << std::endl;
-                    }
-                }
+                // for (std::size_t i = 0; i < 15; ++i) {
+                //     try {
+                //         sleep(1);
+                //         auto req = _get_request();
+                //
+                //         std::cout << "RECEIVED REQUEST: " << std::to_string(req.method) << " " << req.path << std::endl;
+                //
+                //         auto res = _main_module(req);
+                //
+                //         if (res == std::nullopt) {
+                //             std::cout << "404 Not found" << std::endl;
+                //         } else {
+                //             std::cout << "OK" << std::endl;
+                //         }
+                //         std::cout << "----------" << std::endl;
+                //     } catch (const std::exception& e) {
+                //         std::cerr << "ERROR: " << e.what() << std::endl;
+                //     }
+                // }
             }
 
             request_type _get_request() {
