@@ -15,7 +15,10 @@ namespace http {
         std::string path;
         methods method;
         std::unordered_map<std::string, std::string> headers;
+        std::string body;
     };
+
+    std::ostream& operator<<(std::ostream& os, const request& r);
 }
 
 #endif /* !HTTP_REQUEST_H */

@@ -13,6 +13,10 @@ namespace http::utils {
     */
     std::vector<std::string> split_string(std::string str, const std::string& delimiter);
 
+    std::pair<std::string, std::string> split_string_at_first_delimiter(const std::string& str, const std::string& delimiter);
+
+    std::string trim_string(std::string str, char to_trim);
+
 }
 
 #endif /* !HTTP_UTILS_STRING_HELPER_H */

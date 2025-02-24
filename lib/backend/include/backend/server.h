@@ -75,6 +75,8 @@ namespace backend {
                 std::cout << "----------\n" <<  data << std::endl;
                 request_type r(data);
 
+                std::cout << r;
+
                 auto res = _main_module(r);
 
                 if (!res) {

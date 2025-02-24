@@ -1,5 +1,7 @@
 #include "http/utils/string_helper.h"
 
+#include <algorithm>
+
 namespace http::utils {
     std::vector<std::string> split_string(std::string str, const std::string& delimiter) {
         std::vector<std::string> tokens;
@@ -13,4 +15,24 @@ namespace http::utils {
         tokens.push_back(str);
         return tokens;
     }
+
+    std::pair<std::string, std::string> split_string_at_first_delimiter(const std::string& str, const std::string& delimiter) {
+        if (std::size_t pos = str.find(delimiter); pos != std::string::npos) {
+            return { str.substr(0, pos), str.substr(pos + delimiter.length(), str.size() - 1)};
+        }
+        return { str, ""};
+    }
+
+    std::string trim_string(std::string str, char to_trim) {
+        str.erase(str.begin(), std::find_if(str.begin(), str.end(), [to_trim] (char c) {
+            return c != to_trim;
+        }));
+        str.erase(std::find_if(str.rbegin(), str.rend(), [to_trim] (char c) {
+            return c != to_trim;
+        }).base(), str.end());
+
+        return str;
+    }
+
+
 }

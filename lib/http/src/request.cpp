@@ -21,9 +21,31 @@ namespace http {
             version = to_version(first_line_split[2]);
         }
 
-        // for (std::size_t i = 1; i < lines.size(); ++i) {
-        //     headers
-        // }
+        std::size_t i = 1;
+        for (; i < lines.size(); ++i) {
+            // headers
+            auto [key, value] = utils::split_string_at_first_delimiter(lines[i], ":");
+            if (value.empty()) {
+                break;
+            }
+            headers.emplace(key, utils::trim_string(value, ' '));
+        }
+
+        for (; i < lines.size(); ++i) {
+            // body
+            body += lines[i];
+       }
+    }
+
+    std::ostream& operator<<(std::ostream& os, const request& r) {
+        os << std::to_string(r.method) << " " << r.path << " " << std::to_string(r.version) << "\n";
+
+        for (const auto& [key, value]: r.headers) {
+            os << key << ": " << value << "\n";
+        }
+        os << r.body;
+        os << std::endl;
+        return os;
     }
 
 }
