@@ -34,7 +34,7 @@ namespace backend {
                 std::cout << "STARTING SERVER" << std::endl;
                 std::cout << "===============" << std::endl;
                 std::cout << "PORT=" << _port << std::endl;
-                signal(SIGINT, server::signal_handler);
+                signal(SIGINT, server::_signal_handler);
 
                 _running = true;
                 _network_thread = std::thread([this] () -> void {
@@ -92,7 +92,7 @@ namespace backend {
                 }
             }
 
-            static void signal_handler(int) {
+            static void _signal_handler(int) {
                 _running = false;
             }
     };

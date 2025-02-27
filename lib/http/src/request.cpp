@@ -33,6 +33,10 @@ namespace http {
 
         for (; i < lines.size(); ++i) {
             // body
+            if (lines[i].empty()) {
+                continue;
+            }
+            std::cout << "lines[" << i << "] = " << lines[i] << std::endl;
             body += lines[i];
        }
     }
