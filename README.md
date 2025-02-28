@@ -11,7 +11,7 @@ conan install . --output-folder=build --build=missing
 ```
 Setup cmake
 ```sh
-cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release```
+cd build && cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
 ```
 Build the project
 ```sh
@@ -24,11 +24,16 @@ In order to build and run the unit tests, you must install the [criterion librar
 ### Build the unit tests
 You must enable unit tests on cmake with the following command:
 ```sh
-cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTS=ON
+cd build && cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTS=ON
 ```
 Then, you have to build the project
 ```sh
 cmake --build .
 ```
 
-### Run rhe unit tests
+### Run the unit tests
+
+Inside the build directory, run:
+```sh
+ctest
+```
