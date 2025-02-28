@@ -1,7 +1,8 @@
+#include <stdexcept>
+#include <ostream>
+
 #include "http/request.h"
 #include "http/utils/string_helper.h"
-
-#include <iostream>
 
 namespace http {
     request::request(const std::string& request_string) {
@@ -25,7 +26,7 @@ namespace http {
         for (; i < lines.size(); ++i) {
             // headers
             auto [key, value] = utils::split_string_at_first_delimiter(lines[i], ":");
-            if (value.empty()) {
+            if (key.empty() && value.empty()) {
                 break;
             }
             headers.emplace(key, utils::trim_string(value, ' '));
@@ -36,7 +37,6 @@ namespace http {
             if (lines[i].empty()) {
                 continue;
             }
-            std::cout << "lines[" << i << "] = " << lines[i] << std::endl;
             body += lines[i];
        }
     }
