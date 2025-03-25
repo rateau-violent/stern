@@ -16,6 +16,7 @@ namespace http {
         methods method;
         std::unordered_map<std::string, std::string> headers;
         std::string body;
+        std::unordered_map<std::string, std::string> query;
     };
 
     std::ostream& operator<<(std::ostream& os, const request& r);
