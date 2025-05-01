@@ -5,6 +5,7 @@ add_library(http STATIC
     include/http/response.h
     include/http/status.h
 
+    src/error.cpp
     src/methods.cpp
     src/request.cpp
     src/versions.cpp
