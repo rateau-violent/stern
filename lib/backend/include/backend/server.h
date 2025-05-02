@@ -59,7 +59,7 @@ namespace backend {
             network::tcp_server _tcp_server;
             std::thread _network_thread;
 
-            static inline bool _running = true;
+            static volatile inline bool _running = true;
 
             void _run() {
                 std::cout << "=================" << std::endl << "SERVER IS RUNNING" << std::endl << "=================" << std::endl;
@@ -71,24 +71,25 @@ namespace backend {
                 stop();
             }
 
-            void _request_handler(std::shared_ptr<network::tcp_connection> c, const std::string& data) {
-                std::cout << "----------\n" <<  data << std::endl;
+            void _request_handler(std::shared_ptr<network::tcp_connection> c, const std::string& data) noexcept {
                 request_type r(data);
 
-                std::cout << r;
+                try {
+                    auto res = _main_module(r);
 
-                auto res = _main_module(r);
-
-                if (!res) {
-                    c->send("HTTP/1.0 404 NOT FOUND\r\n"
-                        "Content-Type: text/html; charset=UTF-8\r\n"
-                        "Content-Length: 11\r\n\r\n"
-                        "NOT FOUND\r\n");
-                } else {
-                    c->send("HTTP/1.0 200 OK\r\n"
-                        "Content-Type: text/html; charset=UTF-8\r\n"
-                        "Content-Length: 4\r\n\r\n"
-                        "OK\r\n");
+                    if (res) {
+                        c->send(res.value().complete(r));
+                    } else {
+                        c->send(http::response{http::error::not_found{}}.complete(r));
+                    }
+                } catch (const http::error::error& e) {
+                    c->send(http::response{e}.complete(r));
+                } catch (const std::exception& e) {
+                    std::cerr << "ERROR: " << e.what() << std::endl;
+                    c->send(http::response{http::error::internal_server_error{}}.complete(r));
+                } catch (...) {
+                    std::cerr << "ERROR: Unknown error" << std::endl;
+                    c->send(http::response{http::error::internal_server_error{}}.complete(r));
                 }
             }
 

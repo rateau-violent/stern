@@ -23,7 +23,7 @@ namespace http {
 }
 
 namespace std {
-    string to_string(enum http::versions version) {
+    string to_string(const enum http::versions version) {
         switch (version) {
             case http::versions::HTTP_0_9: return "HTTP/0.9";
             case http::versions::HTTP_1_0: return "HTTP/1.0";

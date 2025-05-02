@@ -16,7 +16,7 @@ namespace http {
 }
 
 namespace std {
-    string to_string(http::versions);
+    string to_string(const http::versions);
 }
 
 #endif /* !HTTP_VERSION_H */

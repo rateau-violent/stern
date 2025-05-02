@@ -13,7 +13,7 @@ namespace http::error {
         error(codes::PAYMENT_REQUIRED, message) {}
 
     forbidden::forbidden(const std::string& message):
-        error(codes::FORBIDDENT, message) {}
+        error(codes::FORBIDDEN, message) {}
 
     not_found::not_found(const std::string& message):
         error(codes::NOT_FOUND, message) {}

@@ -15,31 +15,31 @@ namespace example {
         for (const auto u: _users) {
             std::cout << "  " << u << std::endl;
         }
-        return {};
+        return {http::codes::OK, "OK"};
     }
 
     http::response user_controller::_post_user(const http::request& req) {
         std::cout << "POST USER" << std::endl;
         _users.emplace_back("John Doe");
-        return {};
+        return {http::codes::CREATED, "CREATED"};
     }
 
     http::response user_controller::_delete_user(const http::request& req) {
         std::cout << "DELETE USER" << std::endl;
         if (_users.empty()) {
-            return {};
+            throw http::error::bad_request{};
         }
         _users.pop_back();
-        return {};
+        return {http::codes::OK, "OK"};
     }
 
     http::response user_controller::_update_user(const http::request& req) {
         std::cout << "UPDATE USER" << std::endl;
         if (_users.empty()) {
-            return {};
+            throw http::error::bad_request{};
         }
         _users.pop_back();
         _users.emplace_back("Mimy Mathy");
-        return {};
+        return {http::codes::OK, "OK"};
     }
 }

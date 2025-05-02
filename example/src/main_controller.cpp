@@ -10,6 +10,6 @@ namespace example {
 
     http::response main_controller::_basic_get(const http::request& req) {
         std::cout << "Everything is all right!" << std::endl;
-        return {};
+        return {http::codes::OK, "OK"};
     }
 }
