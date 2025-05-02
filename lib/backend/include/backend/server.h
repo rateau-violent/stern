@@ -15,6 +15,7 @@ namespace backend {
     template <Framework F, typename Route>
     class server {
         using module_type = backend::module_base<F, Route>;
+        using controller_type = backend::controller_base<F, Route>;
 
         using request_type = typename F::request_type;
         using response_type = typename F::response_type;
@@ -24,9 +25,16 @@ namespace backend {
             explicit server(std::size_t port, module_type&& main_module):
                 _port{port},
                 _main_module{std::move(main_module)},
-                _tcp_server{port, [this](std::shared_ptr<network::tcp_connection> c, const std::string& data) {
+                _tcp_server{port, [this](const std::shared_ptr<network::tcp_connection>& c, const std::string& data) {
                     _request_handler(c, data);
-                }} {
+                }},
+                _routes{_main_module.get_routes()} {
+
+                std::cout << "The following routes will be used:" << std::endl;
+                for (const auto& [name, _]: _routes) {
+                    std::cout << "  " << std::to_string(name.method) << " " << name.path << std::endl;
+                }
+                std::cout << std::endl;
             }
 
             void start() {
@@ -56,13 +64,17 @@ namespace backend {
         private:
             std::size_t _port;
             module_type _main_module;
+            std::unordered_map<typename controller_type::route_key, Route, typename controller_type::route_key_hash> _routes;
+
             network::tcp_server _tcp_server;
             std::thread _network_thread;
 
             static volatile inline bool _running = true;
 
             void _run() {
-                std::cout << "=================" << std::endl << "SERVER IS RUNNING" << std::endl << "=================" << std::endl;
+                std::cout << "=================" << std::endl
+                          << "SERVER IS RUNNING" << std::endl
+                          << "=================" << std::endl;
 
                 while (_running) {
                     std::this_thread::yield();
@@ -71,25 +83,33 @@ namespace backend {
                 stop();
             }
 
+            std::optional<response_type> _get_response(const request_type& req) {
+                auto r = _routes.find({req.path, req.method});
+
+                if (r == _routes.end()) {
+                    return std::nullopt;
+                }
+
+                return r->second(req);
+            }
+
             void _request_handler(std::shared_ptr<network::tcp_connection> c, const std::string& data) noexcept {
-                request_type r(data);
+                request_type req(data);
 
                 try {
-                    auto res = _main_module(r);
-
-                    if (res) {
-                        c->send(res.value().complete(r));
+                    if (auto res = _get_response(req); res) {
+                        c->send(res.value().complete(req));
                     } else {
-                        c->send(http::response{http::error::not_found{}}.complete(r));
+                        c->send(http::response{http::error::not_found{}}.complete(req));
                     }
                 } catch (const http::error::error& e) {
-                    c->send(http::response{e}.complete(r));
+                    c->send(http::response{e}.complete(req));
                 } catch (const std::exception& e) {
                     std::cerr << "ERROR: " << e.what() << std::endl;
-                    c->send(http::response{http::error::internal_server_error{}}.complete(r));
+                    c->send(http::response{http::error::internal_server_error{}}.complete(req));
                 } catch (...) {
                     std::cerr << "ERROR: Unknown error" << std::endl;
-                    c->send(http::response{http::error::internal_server_error{}}.complete(r));
+                    c->send(http::response{http::error::internal_server_error{}}.complete(req));
                 }
             }
 

@@ -22,6 +22,8 @@ namespace backend {
         using response_type = typename F::response_type;
         using method_type = typename F::method_type;
 
+        using controller_type = controller_base<F, Route>;
+
         public:
             /**
              * @brief Constructs a module_base object
@@ -49,20 +51,39 @@ namespace backend {
                 return std::nullopt;
             }
 
+            const std::unordered_map<typename controller_type::route_key, Route, typename controller_type::route_key_hash>&
+                get_routes() const noexcept {
+                return _routes;
+            }
+
         protected:
             template<typename ControllerType, typename... P>
             void _emplace_controller(P... params) {
                 _controllers.emplace_back(std::make_unique<ControllerType>(params...));
+
+                for (const auto& c: _controllers) {
+                    for (const auto& r: c->get_routes()) {
+                        _routes.emplace(r);
+                    }
+                }
             }
 
             template<typename ModuleType, typename... P>
             void _emplace_submodule(P... params) {
                 _submodules.emplace_back(std::make_unique<ModuleType>(params...));
+
+                for (const auto& m: _submodules) {
+                    for (const auto& r: m->get_routes()) {
+                        _routes.emplace(r);
+                    }
+                }
             }
 
         private:
-            std::vector<std::unique_ptr<controller_base<F, Route>>> _controllers;
+            std::vector<std::unique_ptr<controller_type>> _controllers;
             std::vector<std::unique_ptr<module_base<F, Route>>> _submodules;
+            std::unordered_map<typename controller_type::route_key, Route, typename controller_type::route_key_hash> _routes;
+
     };
 }
 

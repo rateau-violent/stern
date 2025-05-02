@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <optional>
 #include <typeindex>
+#include <utils.h>
 
 #include "concepts.h"
 
@@ -25,6 +26,24 @@ namespace backend {
         using route_tuple = std::tuple<std::string, method_type, Route>;
 
         public:
+            struct route_key {
+                std::string path;
+                method_type method;
+
+                bool operator==(const route_key& other) const {
+                    return path == other.path && method == other.method;
+                }
+            };
+
+            struct route_key_hash {
+                std::size_t operator()(route_key key) const {
+                    std::size_t h1 = std::hash<std::string>{}(key.path);
+                    std::size_t h2 = std::hash<method_type>{}(key.method);
+
+                    return h1 ^ (h2 << 1);
+                }
+            };
+
             /**
              * @brief Constructs a controller_base object
              * @param [in] prefix An optional prefix that will be applied to all the controller's routes path
@@ -66,25 +85,11 @@ namespace backend {
                 }
             }
 
+            const std::unordered_map<route_key, Route, route_key_hash>& get_routes() const noexcept {
+                return _routes;
+            }
+
         private:
-            struct route_key {
-                std::string path;
-                method_type method;
-
-                bool operator==(const route_key&other) const {
-                    return path == other.path && method == other.method;
-                }
-            };
-
-            struct route_key_hash {
-                std::size_t operator()(route_key key) const {
-                    std::size_t h1 = std::hash<std::string>{}(key.path);
-                    std::size_t h2 = std::hash<method_type>{}(key.method);
-
-                    return h1 ^ (h2 << 1);
-                }
-            };
-
             std::string _prefix;
             std::unordered_map<route_key, Route, route_key_hash> _routes;
     };
