@@ -4,9 +4,9 @@
 #include "http/response.h"
 
 namespace http {
-    response::response(codes c, const std::string& b): code{c}, body(b) {
+    response::response(codes c, const body_type& b): code{c}, body(b) {
         headers.emplace("Content-Length", std::to_string(body.size() + 2));
-        headers.emplace("Content-Type", "text/html; charset=UTF-8");
+        headers.emplace("Content-Type", (body.is_json()) ? "application/json" : "text/html; charset=UTF-8");
     }
 
     response::response(const error::error& e) noexcept: response(e.code, e.message) {}
@@ -22,7 +22,7 @@ namespace http {
         for (const auto& [key, value]: headers) {
             ss << key << ": " << value << "\r\n";
         }
-        ss << "\r\n" << body << "\r\n";
+        ss << "\r\n" << body.to_string() << "\r\n";
         return ss.str();
     }
 

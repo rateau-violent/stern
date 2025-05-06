@@ -15,7 +15,7 @@ namespace example {
         for (const auto u: _users) {
             std::cout << "  " << u << std::endl;
         }
-        return {http::codes::OK, "OK"};
+        return {http::codes::OK, nlohmann::json::array()};
     }
 
     http::response user_controller::_post_user(const http::request& req) {

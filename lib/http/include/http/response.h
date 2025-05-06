@@ -3,6 +3,7 @@
 
 #include <optional>
 
+#include "body.h"
 #include "error.h"
 #include "versions.h"
 #include "request.h"
@@ -10,7 +11,7 @@
 namespace http {
     class response {
         public:
-            response(codes code, const std::string& body);
+            response(codes code, const body_type& body);
             response(const response& res) noexcept = default;
             response(response&& res) noexcept = default;
             response(const error::error& e) noexcept;
@@ -21,10 +22,11 @@ namespace http {
 
         private:
             codes code;
-            std::string body;
+            body_type body;
             std::optional<versions> version{std::nullopt};
             std::unordered_map<std::string, std::string> headers;
     };
+
 }
 
 #endif /* !HTTP_RESPONSE_H */
