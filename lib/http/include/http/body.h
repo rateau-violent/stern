@@ -9,13 +9,19 @@
 namespace http {
 
     class body_type {
-        using json = nlohmann::json;
         public:
+            using json = nlohmann::json;
+
+            body_type() = default;
             body_type(const std::string& content);
             body_type(std::string&& content);
             body_type(const char* content);
             body_type(const json& content);
             body_type(json&& content);
+
+            body_type& operator=(const body_type&) = default;
+
+            bool operator==(const body_type&) const = default;
 
             std::size_t size() const noexcept;
 

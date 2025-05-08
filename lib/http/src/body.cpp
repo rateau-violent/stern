@@ -1,8 +1,17 @@
 #include "http/body.h"
 
 namespace http {
-    body_type::body_type(const std::string& content): _data{content} {}
-    body_type::body_type(const char* content): _data{std::string(content)} {}
+    body_type::body_type(const std::string& content) {
+        try {
+            auto json_content = json::parse(content);
+
+            _data = json_content;
+        } catch (...) {
+            _data = content;
+        }
+
+    }
+    body_type::body_type(const char* content): body_type(std::string(content)) {}
     body_type::body_type(const json& content): _data{content} {}
 
     body_type::body_type(std::string&& content): _data{std::move(content)} {}
@@ -12,7 +21,7 @@ namespace http {
     std::size_t body_type::size() const noexcept {
         struct visitor {
             std::size_t operator()(const std::string& s) const { return s.size(); }
-            std::size_t operator()(const json& o) const { return o.dump().size(); }
+            std::size_t operator()(const json& o) const { return nlohmann::to_string(o).size(); }
         };
 
         return std::visit(visitor{}, _data);
@@ -21,7 +30,7 @@ namespace http {
     std::string body_type::to_string() const {
         struct visitor {
             std::string operator()(const std::string& s) const { return s; }
-            std::string operator()(const json& o) const { return o.dump(); }
+            std::string operator()(const json& o) const { return nlohmann::to_string(o); }
         };
 
         return std::visit(visitor{}, _data);
@@ -35,6 +44,5 @@ namespace http {
 
         return std::visit(visitor{}, _data);
     }
-
 
 }

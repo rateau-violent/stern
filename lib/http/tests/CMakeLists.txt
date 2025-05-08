@@ -1,4 +1,5 @@
 add_executable(http_tests
+        test_body.cpp
         test_methods.cpp
         test_request.cpp
         test_versions.cpp

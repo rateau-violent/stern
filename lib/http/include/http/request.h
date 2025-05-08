@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 
+#include "body.h"
 #include "methods.h"
 #include "versions.h"
 
@@ -15,7 +16,7 @@ namespace http {
         std::string path;
         methods method;
         std::unordered_map<std::string, std::string> headers;
-        std::string body;
+       body_type body;
         std::unordered_map<std::string, std::string> query;
     };
 

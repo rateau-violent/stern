@@ -48,13 +48,16 @@ namespace http {
             headers.emplace(key, utils::trim_string(value, ' '));
         }
 
+        std::string raw_body;
         for (; i < lines.size(); ++i) {
             // body
             if (lines[i].empty()) {
                 continue;
             }
-            body += lines[i];
+            raw_body += lines[i];
        }
+
+        body = body_type(raw_body);
     }
 
     std::ostream& operator<<(std::ostream& os, const request& r) {
@@ -63,7 +66,7 @@ namespace http {
         for (const auto& [key, value]: r.headers) {
             os << key << ": " << value << "\n";
         }
-        os << r.body;
+        os << r.body.to_string();
         os << std::endl;
         return os;
     }
