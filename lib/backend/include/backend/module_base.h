@@ -14,15 +14,15 @@ namespace backend {
      * Each of the modules must inherit from the module_base class
      * A module_base handles all the routes from the contained controllers and submodules for the given module and path
      * @tparam F The framework used by the module
-     * @tparam Route The type of the routes used by the module and its contained controllers and submodules
      */
-    template<Framework F, typename Route>
+    template<Framework F>
     class module_base {
         using request_type = typename F::request_type;
         using response_type = typename F::response_type;
         using method_type = typename F::method_type;
 
-        using controller_type = controller_base<F, Route>;
+        using controller_type = controller_base<F>;
+        using route_type = typename controller_type::route_type;
 
         public:
             /**
@@ -51,7 +51,7 @@ namespace backend {
                 return std::nullopt;
             }
 
-            const std::unordered_map<typename controller_type::route_key, Route, typename controller_type::route_key_hash>&
+            const std::unordered_map<typename controller_type::route_key, route_type, typename controller_type::route_key_hash>&
                 get_routes() const noexcept {
                 return _routes;
             }
@@ -83,26 +83,26 @@ namespace backend {
 
         private:
             std::vector<std::unique_ptr<controller_type>> _controllers;
-            std::vector<std::unique_ptr<module_base<F, Route>>> _submodules;
-            std::unordered_map<typename controller_type::route_key, Route, typename controller_type::route_key_hash> _routes;
+            std::vector<std::unique_ptr<module_base<F>>> _submodules;
+            std::unordered_map<typename controller_type::route_key, route_type, typename controller_type::route_key_hash> _routes;
 
-            template<typename T, typename... P>
-            void _emplace_routes(std::vector<std::unique_ptr<T>>& container, P... params) {
-                auto size = container.size();
-
-                std::cout << "size = " << size << std::endl;
-                container.emplace_back(std::make_unique<T>(params...));
-
-                std::cout << "new size = " << container.size() << std::endl;
-                for (std::size_t i = size; i < container.size(); ++i) {
-                    std::cout << "coucou " << i << std::endl;
-                    std::cout << container[i]->get_routes().size() << std::endl;
-                    for(const auto& r: container[i]->get_routes()) {
-                        std::cout << "salut" << std::endl;
-                        _routes.emplace(r);
-                    }
-                }
-            }
+            // template<typename T, typename... P>
+            // void _emplace_routes(std::vector<std::unique_ptr<T>>& container, P... params) {
+            //     auto size = container.size();
+            //
+            //     std::cout << "size = " << size << std::endl;
+            //     container.emplace_back(std::make_unique<T>(params...));
+            //
+            //     std::cout << "new size = " << container.size() << std::endl;
+            //     for (std::size_t i = size; i < container.size(); ++i) {
+            //         std::cout << "coucou " << i << std::endl;
+            //         std::cout << container[i]->get_routes().size() << std::endl;
+            //         for(const auto& r: container[i]->get_routes()) {
+            //             std::cout << "salut" << std::endl;
+            //             _routes.emplace(r);
+            //         }
+            //     }
+            // }
 
     };
 }
