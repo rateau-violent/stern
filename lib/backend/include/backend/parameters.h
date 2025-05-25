@@ -36,7 +36,7 @@ namespace backend::parameter {
 
         template<BodyParameter P>
         static P transform(const request_type& req) {
-            return rfl::json::read<P>(R"({"first_name":"John","last_name":"Doe","age":42})").value();
+            return rfl::json::read<P>(F::body_to_json(req)).value();
         }
 
         template<UriParameter P>
