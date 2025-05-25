@@ -14,9 +14,19 @@
 #include "http/framework.h"
 
 namespace example {
-    using controller = backend::controller_base<http::framework>;
+    struct http_framework {
+        using method_type = http::methods;
+        using response_type = http::response;
+        using request_type = http::request;
+
+        static std::string body_to_json(const request_type& req) {
+            return req.body.to_string();
+        }
+    };
+
+    using controller = backend::controller_base<http_framework>;
     using controller_container = std::vector<std::unique_ptr<controller>>;
-    using module = backend::module_base<http::framework>;
+    using module = backend::module_base<http_framework>;
 }
 
 #endif /* !EXAMPLE_UTILS_H */
