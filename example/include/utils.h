@@ -14,10 +14,9 @@
 #include "http/framework.h"
 
 namespace example {
-    using route = std::function<http::response (http::request)>;
-    using controller = backend::controller_base<http::framework, route>;
+    using controller = backend::controller_base<http::framework>;
     using controller_container = std::vector<std::unique_ptr<controller>>;
-    using module = backend::module_base<http::framework, route>;
+    using module = backend::module_base<http::framework>;
 }
 
 #endif /* !EXAMPLE_UTILS_H */

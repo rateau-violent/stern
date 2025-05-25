@@ -5,9 +5,10 @@
 #include <unordered_map>
 #include <optional>
 #include <typeindex>
-#include <utils.h>
+// #include <utils.h>
 
 #include "concepts.h"
+#include "parameters.h"
 
 namespace backend {
     /**
@@ -15,15 +16,18 @@ namespace backend {
      * Each of the controllers can inherit from the controller_base class or can be declared directly as a controller_base
      * A controller_base handles all the routes it contains and calls the right route for the given method and path
      * @tparam F The framework used by the controller
-     * @tparam Route The type of the routes used by the controller
      */
-    template <Framework F, typename Route>
+    template <Framework F>
     class controller_base {
+
         using request_type = typename F::request_type;
         using response_type = typename F::response_type;
         using method_type = typename F::method_type;
 
-        using route_tuple = std::tuple<std::string, method_type, Route>;
+        public:
+            using route_type = std::function<response_type (const request_type&)>;
+        private:
+            using route_tuple = std::tuple<std::string, method_type, route_type>;
 
         public:
             struct route_key {
@@ -85,13 +89,23 @@ namespace backend {
                 }
             }
 
-            const std::unordered_map<route_key, Route, route_key_hash>& get_routes() const noexcept {
+            template<parameter::RouteParameter... Params, typename Function>
+            controller_base& emplace_route(const std::string& path, method_type m, Function f) {
+                static_assert(sizeof ...(Params) < 4);
+
+                _routes.emplace(route_key{_prefix + path, m}, [f = std::forward<Function>(f)](const request_type& r) {
+                    return f(r, parameter::transformer<F>::template transform<Params>(r)...);
+                });
+                return *this;
+            }
+
+            const std::unordered_map<route_key, route_type, route_key_hash>& get_routes() const noexcept {
                 return _routes;
             }
 
         private:
             std::string _prefix;
-            std::unordered_map<route_key, Route, route_key_hash> _routes;
+            std::unordered_map<route_key, route_type, route_key_hash> _routes;
     };
 }
 

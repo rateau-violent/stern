@@ -8,7 +8,7 @@
 
 
 int main() {
-  backend::server<http::framework, example::route> server(3000, example::main_module());
+  backend::server<http::framework> server(3000, example::main_module());
 
   server.start();
 

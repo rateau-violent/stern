@@ -12,10 +12,11 @@
 #include <network/tcp_server.h>
 
 namespace backend {
-    template <Framework F, typename Route>
+    template <Framework F>
     class server {
-        using module_type = backend::module_base<F, Route>;
-        using controller_type = backend::controller_base<F, Route>;
+        using module_type = backend::module_base<F>;
+        using controller_type = backend::controller_base<F>;
+        using route_type = typename controller_type::route_type;
 
         using request_type = typename F::request_type;
         using response_type = typename F::response_type;
@@ -37,6 +38,9 @@ namespace backend {
                 std::cout << std::endl;
             }
 
+            server(const server&) = delete;
+            server(server&&) = delete;
+
             void start() {
                 std::cout << "===============" << std::endl;
                 std::cout << "STARTING SERVER" << std::endl;
@@ -53,7 +57,7 @@ namespace backend {
             }
 
             void stop() {
-                std::cout << "=== STOPPING SERVER ===" << std::endl;
+                std::cout << std::endl << "=== STOPPING SERVER ===" << std::endl;
                 _tcp_server.stop();
                 if (_network_thread.joinable()) {
                     _network_thread.join();
@@ -64,7 +68,7 @@ namespace backend {
         private:
             std::size_t _port;
             module_type _main_module;
-            std::unordered_map<typename controller_type::route_key, Route, typename controller_type::route_key_hash> _routes;
+            std::unordered_map<typename controller_type::route_key, route_type, typename controller_type::route_key_hash> _routes;
 
             network::tcp_server _tcp_server;
             std::thread _network_thread;
