@@ -1,6 +1,5 @@
 [requires]
 asio/1.32.0
-reflect-cpp/0.18.0
 
 [generators]
 CMakeDeps

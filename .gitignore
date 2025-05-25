@@ -5,3 +5,6 @@
 build/
 cmake-build-debug/
 CMakeUserPresets.json
+
+# submodules
+vendors/
