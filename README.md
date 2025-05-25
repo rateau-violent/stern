@@ -1,5 +1,10 @@
 ## Build
 
+Init submodules:
+```sh
+./configure.sh
+```
+
 Detect conan profile
 ```sh
 conan profile detect --force

@@ -1,5 +1,3 @@
-add_compile_options("-D REFLECT_CPP_C_ARRAYS_OR_INHERITANCE")
-
 add_library(backend STATIC
     include/backend/backend.h
     include/backend/controller_base.h
@@ -9,12 +7,10 @@ add_library(backend STATIC
     include/backend/server.h
 )
 
-find_package(reflectcpp)
-
 target_link_libraries(backend
     http
     network
-    reflectcpp::reflectcpp
+    reflectcpp
 )
 
 target_include_directories(backend PUBLIC
