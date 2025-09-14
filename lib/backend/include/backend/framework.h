@@ -29,6 +29,10 @@ namespace backend {
 
 		// the framework must implement a function that returns the request's body as a json string
 		{ T::body_to_json(typename T::request_type("")) } -> std::same_as<std::string>;
+    	// the framework must implement a function that returns the request's query parameters as a json string
+    	{ T::query_to_json(typename T::request_type("")) } -> std::same_as<std::string>;
+		// the framework must implement a function that returns the request's uri parameters as a json string
+    	{ T::uri_to_json(typename T::request_type("")) } -> std::same_as<std::string>;
     };
 }
 

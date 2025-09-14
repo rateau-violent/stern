@@ -8,7 +8,11 @@ namespace example {
     struct user_dto: backend::parameter::body {
       std::string first_name;
       std::string last_name;
-      int age;
+      std::size_t age;
+    };
+
+    struct user_id: backend::parameter::uri {
+        std::size_t id;
     };
 }
 
