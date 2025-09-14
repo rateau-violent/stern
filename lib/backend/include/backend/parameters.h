@@ -31,7 +31,7 @@ namespace backend::parameter {
 
         template<QueryParameter P>
         static P transform(const request_type& req) {
-            // return rfl::json::read<P>(req.query).value();
+            return rfl::json::read<P>(F::query_to_json(req)).value();
         }
 
         template<BodyParameter P>
@@ -41,7 +41,7 @@ namespace backend::parameter {
 
         template<UriParameter P>
         static P transform(const request_type& req) {
-            // return rfl::json::read<P>("{}").value();
+            return rfl::json::read<P>(F::uri_to_json(req)).value();
         }
     };
 

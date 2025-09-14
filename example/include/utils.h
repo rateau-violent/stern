@@ -22,6 +22,14 @@ namespace example {
         static std::string body_to_json(const request_type& req) {
             return req.body.to_string();
         }
+
+        static std::string query_to_json(const request_type& req) {
+            return "{}"; // TODO
+        }
+
+        static std::string uri_to_json(const request_type& req) {
+            return "{}"; // TODO
+        }
     };
 
     using controller = backend::controller_base<http_framework>;

@@ -10,12 +10,18 @@ namespace example {
             user_controller();
 
         private:
-            std::vector<std::string> _users;
+            struct user {
+                std::string first_name;
+                std::string last_name;
+                std::size_t age;
+            };
 
-            http::response _get_users(const http::request& req);
+            std::vector<user> _users;
+
+            http::response _get_users(const http::request& req, const user_id&) const;
             http::response _post_user(const http::request& req, const user_dto& user);
-            http::response _delete_user(const http::request& req);
-            http::response _update_user(const http::request& req);
+            http::response _delete_user(const http::request& req, const user_id&);
+            http::response _update_user(const http::request& req, const user_id&, const user_dto&);
     };
 }
 

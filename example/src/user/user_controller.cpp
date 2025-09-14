@@ -3,47 +3,52 @@
 
 namespace example {
     user_controller::user_controller(): controller("/users"), _users{} {
-        emplace_routes({
-          { "", http::methods::GET, [this] (const http::request &req) { return _get_users(req); } },
-          // { "", http::methods::POST, [this] (const http::request &req) { return _post_user(req); } },
-          { "", http::methods::DELETE, [this] (const http::request &req) { return _delete_user(req); } },
-          { "", http::methods::PUT, [this] (const http::request &req) { return _update_user(req); } }
+        emplace_route<user_id>("", http::methods::GET, [this](const auto&req, const auto& query) {
+            return _get_users(req, query);
         });
-        emplace_route<user_dto>("", http::methods::POST, [this] (const http::request& req, const user_dto& user) {
-            return _post_user(req, user);
+        emplace_route<user_dto>("", http::methods::POST, [this] (const auto& req, const auto& body) {
+            return _post_user(req, body);
+        });
+        emplace_route<user_id>("", http::methods::DELETE, [this](const auto& req, const auto& query) {
+            return _delete_user(req, query);
+        });
+        emplace_route<user_id, user_dto>("", http::methods::PUT, [this](const auto& req, const auto& query, const auto& body) {
+            return _update_user(req, query, body);
         });
     }
 
-    http::response user_controller::_get_users(const http::request& req) {
-        std::cout << "GET USER" << std::endl;
-        for (const auto u: _users) {
-            std::cout << "  " << u << std::endl;
+    http::response user_controller::_get_users(const http::request& req, const user_id& query) const {
+        std::cout << "GET USER " << query.id << std::endl;
+        if (query.id >= _users.size()) {
+            throw http::error::not_found();
         }
-        return {http::codes::OK, nlohmann::json::array()};
+        return {http::codes::OK, rfl::json::write(_users[query.id])};
     }
 
     http::response user_controller::_post_user(const http::request& req, const user_dto& user) {
         std::cout << "POST USER " << user.first_name << " " << user.last_name << std::endl;
-        _users.emplace_back(user.first_name + " " + user.last_name);
+        _users.emplace_back(user.first_name, user.last_name, user.age);
         return {http::codes::CREATED, "CREATED"};
     }
 
-    http::response user_controller::_delete_user(const http::request& req) {
+    http::response user_controller::_delete_user(const http::request& req, const user_id& query) {
         std::cout << "DELETE USER" << std::endl;
-        if (_users.empty()) {
-            throw http::error::bad_request{};
+        if (_users.size() <= query.id) {
+            throw http::error::not_found{};
         }
-        _users.pop_back();
+        _users.erase(_users.begin() + query.id);
         return {http::codes::OK, "OK"};
     }
 
-    http::response user_controller::_update_user(const http::request& req) {
+    http::response user_controller::_update_user(const http::request& req, const user_id& query, const user_dto& body) {
         std::cout << "UPDATE USER" << std::endl;
-        if (_users.empty()) {
-            throw http::error::bad_request{};
+        if (query.id >= _users.size()) {
+            throw http::error::not_found{};
         }
-        _users.pop_back();
-        _users.emplace_back("Mimy Mathy");
+        auto &u = _users.at(query.id);
+        u.first_name = body.first_name;
+        u.last_name = body.last_name;
+        u.age = body.age;
         return {http::codes::OK, "OK"};
     }
 }
