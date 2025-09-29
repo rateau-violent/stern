@@ -1,9 +1,9 @@
-#ifndef BACKEND_CONCEPTS_H
-#define BACKEND_CONCEPTS_H
+#ifndef STERN_CONCEPTS_H
+#define STERN_CONCEPTS_H
 
 #include <concepts>
 
-namespace backend {
+namespace stern {
     /**
      * @brief Defines the types required by the backend module
      */
@@ -36,4 +36,4 @@ namespace backend {
     };
 }
 
-#endif /* !BACKEND_CONCEPTS_H */
+#endif /* !STERN_CONCEPTS_H */

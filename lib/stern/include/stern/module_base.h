@@ -1,5 +1,5 @@
-#ifndef BACKEND_MODULE_H
-#define BACKEND_MODULE_H
+#ifndef STERN_MODULE_H
+#define STERN_MODULE_H
 
 #include <vector>
 #include <memory>
@@ -8,7 +8,7 @@
 
 #include "controller_base.h"
 
-namespace backend {
+namespace stern {
     /**
      * @brief A module contains and handle multiple controller and/or multiple submodules
      * Each of the modules must inherit from the module_base class
@@ -107,4 +107,4 @@ namespace backend {
     };
 }
 
-# endif /* !BACKEND_MODULE_H */
+# endif /* !STERN_MODULE_H */

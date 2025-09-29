@@ -12,12 +12,12 @@ namespace http {
         public:
             using json = nlohmann::json;
 
-            body_type() = default;
-            body_type(const std::string& content);
-            body_type(std::string&& content);
-            body_type(const char* content);
-            body_type(const json& content);
-            body_type(json&& content);
+            explicit body_type() = default;
+            explicit body_type(const std::string& content);
+            explicit body_type(std::string&& content);
+            explicit body_type(const char* content);
+            explicit body_type(const json& content);
+            explicit body_type(json&& content);
 
             body_type& operator=(const body_type&) = default;
 

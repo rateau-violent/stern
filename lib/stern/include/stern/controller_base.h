@@ -1,5 +1,5 @@
-#ifndef BACKEND_CONTROLLER_BASE_H
-#define BACKEND_CONTROLLER_BASE_H
+#ifndef STERN_CONTROLLER_BASE_H
+#define STERN_CONTROLLER_BASE_H
 
 #include <string>
 #include <unordered_map>
@@ -10,7 +10,7 @@
 #include "framework.h"
 #include "parameters.h"
 
-namespace backend {
+namespace stern {
     /**
      * @brief A controller defines and contains routes for a part of the backend (e.g. user management)
      * Each of the controllers can inherit from the controller_base class or can be declared directly as a controller_base
@@ -109,4 +109,4 @@ namespace backend {
     };
 }
 
-#endif /* !BACKEND_CONTROLLER_BASE_H */
+#endif /* !STERN_CONTROLLER_BASE_H */

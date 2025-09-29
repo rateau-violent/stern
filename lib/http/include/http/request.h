@@ -10,13 +10,13 @@
 
 namespace http {
     struct request {
-        request(const std::string&);
+        explicit request(const std::string&);
 
         http::versions version;
         std::string path;
         methods method;
         std::unordered_map<std::string, std::string> headers;
-       body_type body;
+        body_type body;
         std::unordered_map<std::string, std::string> query;
     };
 
