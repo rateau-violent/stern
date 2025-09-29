@@ -1,12 +1,12 @@
-#ifndef BACKEND_PARAMETERS_H
-#define BACKEND_PARAMETERS_H
+#ifndef STERN_PARAMETERS_H
+#define STERN_PARAMETERS_H
 
 #include <rfl.hpp>
 #include <rfl/json.hpp>
 
 #include "framework.h"
 
-namespace backend::parameter {
+namespace stern::parameter {
     struct query{};
 
     struct body{};
@@ -47,4 +47,4 @@ namespace backend::parameter {
 
 }
 
-#endif /* !BACKEND_PARAMETERS_H */
+#endif /* !STERN_PARAMETERS_H */

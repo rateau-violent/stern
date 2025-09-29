@@ -8,11 +8,11 @@ add_executable(example
 
 include_directories(
         include
-        ../lib/backend/include
+        ../lib/stern/include
         ../lib/http/include
 )
 
 target_link_libraries(example
-        backend
+        stern
         http
 )

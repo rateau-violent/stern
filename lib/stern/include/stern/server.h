@@ -1,5 +1,5 @@
-#ifndef BACKEND_SERVER_H
-#define BACKEND_SERVER_H
+#ifndef STERN_SERVER_H
+#define STERN_SERVER_H
 
 #include "framework.h"
 #include "module_base.h"
@@ -11,11 +11,11 @@
 
 #include <network/tcp_server.h>
 
-namespace backend {
+namespace stern {
     template <Framework F>
     class server {
-        using module_type = backend::module_base<F>;
-        using controller_type = backend::controller_base<F>;
+        using module_type = stern::module_base<F>;
+        using controller_type = stern::controller_base<F>;
         using route_type = typename controller_type::route_type;
 
         using request_type = typename F::request_type;
@@ -94,7 +94,7 @@ namespace backend {
                     return std::nullopt;
                 }
 
-                return r->second(req);
+                return std::optional{r->second(req)};
             }
 
             void _request_handler(std::shared_ptr<network::tcp_connection> c, const std::string& data) noexcept {
@@ -123,4 +123,4 @@ namespace backend {
     };
 }
 
-#endif /* !BACKEND_SERVER_H */
+#endif /* !STERN_SERVER_H */

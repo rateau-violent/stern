@@ -4,11 +4,11 @@
 
 #include "main_module.h"
 
-#include <backend/server.h>
+#include <stern/server.h>
 
 
 int main() {
-  backend::server<example::http_framework> server(3000, example::main_module());
+  stern::server<example::http_framework> server(3000, example::main_module());
 
   server.start();
 

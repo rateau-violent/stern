@@ -9,7 +9,7 @@ namespace http {
         headers.emplace("Content-Type", (body.is_json()) ? "application/json" : "text/html; charset=UTF-8");
     }
 
-    response::response(const error::error& e) noexcept: response(e.code, e.message) {}
+    response::response(const error::error& e) noexcept: response(e.code, body_type{e.message}) {}
 
     response::operator std::string() const {
 

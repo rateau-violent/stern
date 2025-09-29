@@ -39,7 +39,7 @@ Test(request, post_request_with_body_create_from_string) {
     cr_assert_eq(req.headers.at("User-Agent"), "curl/7.81.0");
     cr_assert_eq(req.headers.at("Accept"), "*/*");
     cr_assert(req.body.is_json());
-    cr_assert_eq(req.body, nlohmann::json::parse(R"({"name": "John Doe"})"));
+    cr_assert_eq(req.body.to_string(), nlohmann::json::parse(R"({"name": "John Doe"})"));
     cr_assert(req.query.empty());
 }
 

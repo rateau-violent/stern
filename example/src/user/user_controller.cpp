@@ -22,13 +22,13 @@ namespace example {
         if (query.id >= _users.size()) {
             throw http::error::not_found();
         }
-        return {http::codes::OK, rfl::json::write(_users[query.id])};
+        return http::response{http::codes::OK, http::body_type{rfl::json::write(_users[query.id])}};
     }
 
     http::response user_controller::_post_user(const http::request& req, const user_dto& user) {
         std::cout << "POST USER " << user.first_name << " " << user.last_name << std::endl;
         _users.emplace_back(user.first_name, user.last_name, user.age);
-        return {http::codes::CREATED, "CREATED"};
+        return http::response{http::codes::CREATED, http::body_type{"CREATED"}};
     }
 
     http::response user_controller::_delete_user(const http::request& req, const user_id& query) {
@@ -37,7 +37,7 @@ namespace example {
             throw http::error::not_found{};
         }
         _users.erase(_users.begin() + query.id);
-        return {http::codes::OK, "OK"};
+        return http::response{http::codes::OK, http::body_type{"OK"}};
     }
 
     http::response user_controller::_update_user(const http::request& req, const user_id& query, const user_dto& body) {
@@ -49,6 +49,6 @@ namespace example {
         u.first_name = body.first_name;
         u.last_name = body.last_name;
         u.age = body.age;
-        return {http::codes::OK, "OK"};
+        return http::response{http::codes::OK, http::body_type{"OK"}};
     }
 }

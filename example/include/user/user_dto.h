@@ -5,13 +5,13 @@
 
 namespace example {
 
-    struct user_dto: backend::parameter::body {
+    struct user_dto: stern::parameter::body {
       std::string first_name;
       std::string last_name;
       std::size_t age;
     };
 
-    struct user_id: backend::parameter::uri {
+    struct user_id: stern::parameter::uri {
         std::size_t id;
     };
 }
