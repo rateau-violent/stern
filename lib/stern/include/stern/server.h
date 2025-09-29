@@ -33,7 +33,7 @@ namespace stern {
 
                 std::cout << "The following routes will be used:" << std::endl;
                 for (const auto& [name, _]: _routes) {
-                    std::cout << "  " << std::to_string(name.method) << " " << name.path << std::endl;
+                    std::cout << "  " << std::setw(7) << std::to_string(name.method) << " " << name.path << std::endl;
                 }
                 std::cout << std::endl;
             }
