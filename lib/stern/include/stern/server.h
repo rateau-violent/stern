@@ -1,8 +1,8 @@
 #ifndef STERN_SERVER_H
 #define STERN_SERVER_H
 
-#include "framework.h"
-#include "module_base.h"
+#include "stern/framework.h"
+#include "stern/module_base.h"
 
 #include <iostream>
 #include <thread>
