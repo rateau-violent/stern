@@ -71,7 +71,6 @@ namespace stern {
 
             template<typename ModuleType, typename... P>
             void _emplace_submodule(P... params) {
-                // _emplace_routes(_submodules, params...);
                 _submodules.emplace_back(std::make_unique<ModuleType>(params...));
 
                 for (const auto& m: _submodules) {
@@ -85,25 +84,6 @@ namespace stern {
             std::vector<std::unique_ptr<controller_type>> _controllers;
             std::vector<std::unique_ptr<module_base<F>>> _submodules;
             std::unordered_map<typename controller_type::route_key, route_type, typename controller_type::route_key_hash> _routes;
-
-            // template<typename T, typename... P>
-            // void _emplace_routes(std::vector<std::unique_ptr<T>>& container, P... params) {
-            //     auto size = container.size();
-            //
-            //     std::cout << "size = " << size << std::endl;
-            //     container.emplace_back(std::make_unique<T>(params...));
-            //
-            //     std::cout << "new size = " << container.size() << std::endl;
-            //     for (std::size_t i = size; i < container.size(); ++i) {
-            //         std::cout << "coucou " << i << std::endl;
-            //         std::cout << container[i]->get_routes().size() << std::endl;
-            //         for(const auto& r: container[i]->get_routes()) {
-            //             std::cout << "salut" << std::endl;
-            //             _routes.emplace(r);
-            //         }
-            //     }
-            // }
-
     };
 }
 
