@@ -14,8 +14,8 @@
 namespace stern {
     template <Framework F>
     class server {
-        using module_type = stern::module_base<F>;
-        using controller_type = stern::controller_base<F>;
+        using module_type = module_base<F>;
+        using controller_type = controller_base<F>;
         using route_type = typename controller_type::route_type;
 
         using request_type = typename F::request_type;
@@ -26,11 +26,10 @@ namespace stern {
             explicit server(std::size_t port, module_type&& main_module):
                 _port{port},
                 _main_module{std::move(main_module)},
+                _routes{_main_module.get_routes()},
                 _tcp_server{port, [this](const std::shared_ptr<network::tcp_connection>& c, const std::string& data) {
                     _request_handler(c, data);
-                }},
-                _routes{_main_module.get_routes()} {
-
+                }} {
                 std::cout << "The following routes will be used:" << std::endl;
                 for (const auto& [name, _]: _routes) {
                     std::cout << "  " << std::setw(7) << std::to_string(name.method) << " " << name.path << std::endl;
@@ -97,7 +96,7 @@ namespace stern {
                 return std::optional{r->second(req)};
             }
 
-            void _request_handler(std::shared_ptr<network::tcp_connection> c, const std::string& data) noexcept {
+            void _request_handler(const std::shared_ptr<network::tcp_connection>& c, const std::string& data) noexcept {
                 request_type req(data);
 
                 try {
