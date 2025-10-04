@@ -16,7 +16,7 @@ namespace http {
             explicit response(response&& res) noexcept = default;
             explicit response(const error::error& e) noexcept;
 
-            operator std::string() const;
+            explicit operator std::string() const;
 
             response& complete(const request& req);
 
