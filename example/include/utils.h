@@ -11,8 +11,6 @@
 #include <stern/controller_base.h>
 #include <stern/module_base.h>
 
-#include "http/framework.h"
-
 namespace example {
     struct http_framework {
         using method_type = http::methods;

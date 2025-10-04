@@ -1,8 +1,7 @@
 set(CMAKE_CXX_STANDARD 20)
 
 add_library(http STATIC
-    include/http/framework.h
-    include/http/status.h
+        include/http/status.h
 
     src/body.cpp
     src/error.cpp
