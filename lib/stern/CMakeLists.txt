@@ -15,7 +15,6 @@ target_link_libraries(stern
 
 target_include_directories(stern PUBLIC
     include
-    ../http/include # TODO
 )
 
 set_target_properties(stern PROPERTIES LINKER_LANGUAGE CXX)
