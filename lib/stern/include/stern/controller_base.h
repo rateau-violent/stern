@@ -5,10 +5,9 @@
 #include <unordered_map>
 #include <optional>
 #include <typeindex>
-// #include <utils.h>
 
-#include "framework.h"
-#include "parameters.h"
+#include "stern/framework.h"
+#include "stern/parameters.h"
 
 namespace stern {
     /**

@@ -4,9 +4,7 @@
 #include <vector>
 #include <memory>
 
-#include <iostream>
-
-#include "controller_base.h"
+#include "stern/controller_base.h"
 
 namespace stern {
     /**

@@ -4,7 +4,7 @@
 #include <rfl.hpp>
 #include <rfl/json.hpp>
 
-#include "framework.h"
+#include "stern/framework.h"
 
 namespace stern::parameter {
     struct query{};
