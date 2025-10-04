@@ -1,5 +1,5 @@
-#ifndef STERN_CONCEPTS_H
-#define STERN_CONCEPTS_H
+#ifndef STERN_FRAMEWORK_H
+#define STERN_FRAMEWORK_H
 
 #include <concepts>
 
@@ -36,4 +36,4 @@ namespace stern {
     };
 }
 
-#endif /* !STERN_CONCEPTS_H */
+#endif /* !STERN_FRAMEWORK_H */
