@@ -12,6 +12,10 @@
 #include <network/tcp_server.h>
 
 namespace stern {
+    /**
+     * @brief Server that handles network and routes resolution
+     * @tparam F The framework used by the server
+     */
     template <Framework F>
     class server {
         using module_type = module_base<F>;
@@ -23,6 +27,11 @@ namespace stern {
         using method_type = typename F::method_type;
 
         public:
+            /**
+             * @brief Constructs a server object
+             * @param [in] port The port the server will listen on
+             * @param [in] main_module The backend's main module
+             */
             explicit server(std::size_t port, module_type&& main_module):
                 _port{port},
                 _main_module{std::move(main_module)},
@@ -40,6 +49,9 @@ namespace stern {
             server(const server&) = delete;
             server(server&&) = delete;
 
+            /**
+             * @brief Starts the server
+             */
             void start() {
                 std::cout << "===============" << std::endl;
                 std::cout << "STARTING SERVER" << std::endl;
@@ -55,6 +67,9 @@ namespace stern {
                 _run();
             }
 
+            /**
+             * @brief Stops the server
+             */
             void stop() {
                 std::cout << std::endl << "=== STOPPING SERVER ===" << std::endl;
                 _tcp_server.stop();
