@@ -59,7 +59,6 @@ namespace stern {
         protected:
             template<typename ControllerType, typename... P>
             void _emplace_controller(P... params) {
-                // _emplace_routes(_controllers, params...);
                 _controllers.emplace_back(std::make_unique<ControllerType>(params...));
 
                 for (const auto& c: _controllers) {
@@ -82,7 +81,7 @@ namespace stern {
 
         private:
             std::vector<std::unique_ptr<controller_type>> _controllers;
-            std::vector<std::unique_ptr<module_base<F>>> _submodules;
+            std::vector<std::unique_ptr<module_base>> _submodules;
             std::unordered_map<typename controller_type::route_key, route_type, typename controller_type::route_key_hash> _routes;
     };
 }
