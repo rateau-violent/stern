@@ -7,7 +7,7 @@
 
 namespace http::error {
 
-    struct error {
+    struct error: public std::exception {
         explicit error(codes code, const std::string& message);
 
         codes code;
