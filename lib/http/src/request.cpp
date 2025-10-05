@@ -5,18 +5,14 @@
 #include "http/utils/string_helper.h"
 
 namespace {
-    void parse_url(const std::string& url, std::string& path, std::unordered_map<std::string, std::string>& query) {
+    void parse_url(const std::string& url, std::string& path, http::query_type& query) {
         const std::vector<std::string> url_split = http::utils::split_string(url, "?");
 
         path = url_split[0];
         if (url_split.size() < 2) {
             return;
         }
-        const std::vector<std::string> queries_split = http::utils::split_string(url_split[1], "&");
-        for (const auto& q: queries_split) {
-            auto q_split = http::utils::split_string_at_first_delimiter(q, "=");
-            query.emplace(q_split);
-        }
+        query = http::query_type(url_split[1]);
     }
 }
 
