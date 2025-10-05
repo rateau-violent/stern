@@ -8,7 +8,6 @@ add_library(stern STATIC
 )
 
 target_link_libraries(stern
-    http
     network
     reflectcpp
 )
