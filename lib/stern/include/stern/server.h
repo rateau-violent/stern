@@ -120,14 +120,10 @@ namespace stern {
                     } else {
                         c->send(std::string(F::not_found(req)));
                     }
-                } catch (const http::error::error& e) {
-                    c->send(std::string(http::response{e}.complete(req)));
                 } catch (const std::exception& e) {
-                    std::cerr << "ERROR: " << e.what() << std::endl;
-                    c->send(std::string(http::response{http::error::internal_server_error{}}.complete(req)));
+                    c->send(std::string(F::on_exception(req, e)));
                 } catch (...) {
-                    std::cerr << "ERROR: Unknown error" << std::endl;
-                    c->send(std::string(http::response{http::error::internal_server_error{}}.complete(req)));
+                    c->send(std::string(F::on_unknown_exception(req)));
                 }
             }
 
