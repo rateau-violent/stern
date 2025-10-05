@@ -12,8 +12,8 @@ namespace http {
     class response {
         public:
             explicit response(codes code, const body_type& body);
-            explicit response(const response& res) noexcept = default;
-            explicit response(response&& res) noexcept = default;
+            response(const response& res) noexcept = default;
+            response(response&& res) noexcept = default;
             explicit response(const error::error& e) noexcept;
 
             explicit operator std::string() const;

@@ -4,16 +4,16 @@
 namespace example {
     user_controller::user_controller(): controller("/users"), _users{} {
         emplace_route<user_id>("", http::methods::GET, [this](const auto&req, const auto& query) {
-            return _get_users(req, query);
+            return _get_users(req, query).complete(req);
         });
         emplace_route<user_dto>("", http::methods::POST, [this] (const auto& req, const auto& body) {
-            return _post_user(req, body);
+            return _post_user(req, body).complete(req);
         });
         emplace_route<user_id>("", http::methods::DELETE, [this](const auto& req, const auto& query) {
-            return _delete_user(req, query);
+            return _delete_user(req, query).complete(req);
         });
         emplace_route<user_id, user_dto>("", http::methods::PUT, [this](const auto& req, const auto& query, const auto& body) {
-            return _update_user(req, query, body);
+            return _update_user(req, query, body).complete(req);
         });
     }
 
