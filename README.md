@@ -22,7 +22,7 @@ Stern is designed to let you use any Http Framework. You can choose between the 
 or any third party library, as long as you provide a framework class that respects the 
 [framework concept](./lib/stern/include/stern/framework.h).
 
-Here is an example of framework implementation with the provided http library:
+Your framework implementation should look like this (full framework implementation example [here](./example/include/utils/http_framework.h)):
 ```c++
 struct http_framework {
     using method_type = http::methods;
@@ -38,6 +38,18 @@ struct http_framework {
     }
 
     static std::string uri_to_json(const request_type& req) {
+        // Your implementation here
+    }
+    
+    static response_type not_found(const request_type& req) {
+        // Your implementation here
+    }
+
+    static response_type on_exception(const request_type& req, const std::exception& e) {
+        // Your implementation here
+    }
+
+    static response_type on_unknown_exception(const request_type& req) {
         // Your implementation here
     }
 };
