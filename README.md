@@ -44,6 +44,10 @@ struct http_framework {
     static response_type not_found(const request_type& req) {
         // Your implementation here
     }
+    
+    static void on_ill_formed_request(const request_type& req) {
+        // Your implementation here
+    }
 
     static response_type on_exception(const request_type& req, const std::exception& e) {
         // Your implementation here
