@@ -6,6 +6,7 @@ add_library(http STATIC
     src/body.cpp
     src/error.cpp
     src/methods.cpp
+    src/query.cpp
     src/request.cpp
     src/response.cpp
     src/versions.cpp

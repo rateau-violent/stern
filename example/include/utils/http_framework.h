@@ -19,7 +19,7 @@ namespace example {
         }
 
         static std::string query_to_json(const request_type& req) {
-            return "{}"; // TODO
+            return req.query.to_string();
         }
 
         static std::string uri_to_json(const request_type& req) {
@@ -28,6 +28,10 @@ namespace example {
 
         static response_type not_found(const request_type& req) {
             return http::response{http::error::not_found{}}.complete(req);
+        }
+
+        static void on_ill_formed_request(const request_type& req) {
+            throw http::error::bad_request{};
         }
 
         static response_type on_exception(const request_type& req, const std::exception& e) {

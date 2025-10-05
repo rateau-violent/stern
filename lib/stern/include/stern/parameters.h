@@ -60,7 +60,12 @@ namespace stern::parameter {
          */
         template<QueryParameter P>
         static P transform(const request_type& req) {
-            return rfl::json::read<P>(F::query_to_json(req)).value();
+            try {
+                return rfl::json::read<P>(F::query_to_json(req)).value();
+            } catch (...) {
+                F::on_ill_formed_request(req);
+                return P{};
+            }
         }
 
         /**
@@ -68,7 +73,12 @@ namespace stern::parameter {
          */
         template<BodyParameter P>
         static P transform(const request_type& req) {
-            return rfl::json::read<P>(F::body_to_json(req)).value();
+            try {
+                return rfl::json::read<P>(F::body_to_json(req)).value();
+            } catch (...) {
+                F::on_ill_formed_request(req);
+                return P{};
+            }
         }
 
         /**
@@ -76,7 +86,12 @@ namespace stern::parameter {
          */
         template<UriParameter P>
         static P transform(const request_type& req) {
-            return rfl::json::read<P>(F::uri_to_json(req)).value();
+            try {
+                return rfl::json::read<P>(F::uri_to_json(req)).value();
+            } catch (...) {
+                F::on_ill_formed_request(req);
+                return P{};
+            }
         }
     };
 

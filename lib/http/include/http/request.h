@@ -4,9 +4,10 @@
 #include <string>
 #include <unordered_map>
 
-#include "body.h"
-#include "methods.h"
-#include "versions.h"
+#include "http/body.h"
+#include "http/methods.h"
+#include "http/query.h"
+#include "http/versions.h"
 
 namespace http {
     struct request {
@@ -17,7 +18,7 @@ namespace http {
         methods method;
         std::unordered_map<std::string, std::string> headers;
         body_type body;
-        std::unordered_map<std::string, std::string> query;
+        query_type query;
     };
 
     std::ostream& operator<<(std::ostream& os, const request& r);

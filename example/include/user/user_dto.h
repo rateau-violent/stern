@@ -11,7 +11,7 @@ namespace example {
       std::size_t age;
     };
 
-    struct user_id: stern::parameter::uri {
+    struct user_id: stern::parameter::query {
         std::size_t id;
     };
 }

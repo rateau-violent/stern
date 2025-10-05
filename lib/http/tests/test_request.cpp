@@ -2,6 +2,8 @@
 
 #include <http/request.h>
 
+#include <iostream>
+
 Test(request, get_request_create_from_string) {
     const std::string request_str{
         "GET / HTTP/1.1\r\n"
@@ -52,8 +54,7 @@ Test(request, one_query_parameter) {
 
     const http::request req(request_str);
 
-    cr_assert_eq(req.query.size(), 1);
-    cr_assert_eq(req.query.at("id"), "abcd");
+    cr_assert_eq(req.query.to_string(), nlohmann::to_string(nlohmann::json::parse(R"({"id":"abcd"})")));
 }
 
 Test(request, multiple_query_parameter) {
@@ -65,9 +66,7 @@ Test(request, multiple_query_parameter) {
 
     const http::request req(request_str);
 
-    cr_assert_eq(req.query.size(), 2);
-    cr_assert_eq(req.query.at("age"), "42");
-    cr_assert_eq(req.query.at("single"), "true");
+    cr_assert_eq(req.query.to_string(), nlohmann::to_string(nlohmann::json::parse(R"({"age":42,"single":true})")));
 }
 
 Test(request, query_parameter_without_value) {
@@ -79,8 +78,7 @@ Test(request, query_parameter_without_value) {
 
     const http::request req(request_str);
 
-    cr_assert_eq(req.query.size(), 1);
-    cr_assert_eq(req.query.at("single"), "");
+    cr_assert_eq(req.query.to_string(), nlohmann::to_string(nlohmann::json::parse(R"({"single":""})")));
 }
 
 Test(request, query_parameter_with_comma) {
@@ -92,8 +90,7 @@ Test(request, query_parameter_with_comma) {
 
     const http::request req(request_str);
 
-    cr_assert_eq(req.query.size(), 1);
-    cr_assert_eq(req.query.at("hair"), "short,long");
+    cr_assert_eq(req.query.to_string(), nlohmann::to_string(nlohmann::json::parse(R"({"hair":["short","long"]})")));
 }
 
 Test(request, query_parameter_with_negative_number) {
@@ -105,6 +102,5 @@ Test(request, query_parameter_with_negative_number) {
 
     const http::request req(request_str);
 
-    cr_assert_eq(req.query.size(), 1);
-    cr_assert_eq(req.query.at("tooth"), "-1");
+    cr_assert_eq(req.query.to_string(), nlohmann::to_string(nlohmann::json::parse(R"({"tooth":-1})")));
 }
