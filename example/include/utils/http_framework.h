@@ -19,7 +19,7 @@ namespace example {
         }
 
         static std::string query_to_json(const request_type& req) {
-            return "{}"; // TODO
+            return req.query.to_string();
         }
 
         static std::string uri_to_json(const request_type& req) {
