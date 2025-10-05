@@ -8,9 +8,6 @@
 #include <http/response.h>
 #include <http/request.h>
 
-#include <stern/controller_base.h>
-#include <stern/module_base.h>
-
 namespace example {
     struct http_framework {
         using method_type = http::methods;
