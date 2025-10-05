@@ -28,6 +28,10 @@ namespace example {
         static std::string uri_to_json(const request_type& req) {
             return "{}"; // TODO
         }
+
+        static response_type not_found(const request_type& req) {
+            return http::response{http::error::not_found{}}.complete(req);
+        }
     };
 }
 

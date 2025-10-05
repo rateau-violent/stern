@@ -33,6 +33,9 @@ namespace stern {
     	{ T::query_to_json(typename T::request_type("")) } -> std::same_as<std::string>;
 		/// the framework must implement a function that returns the request's uri parameters as a json string
     	{ T::uri_to_json(typename T::request_type("")) } -> std::same_as<std::string>;
+
+    	/// the framework must implement a function to handle not found routes
+    	{ T::not_found(typename T::request_type("")) } -> std::same_as<typename T::response_type>;
     };
 }
 
