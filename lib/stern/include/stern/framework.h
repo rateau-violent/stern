@@ -36,6 +36,8 @@ namespace stern {
 
     	/// the framework must implement a function to handle not found routes
     	{ T::not_found(typename T::request_type("")) } -> std::same_as<typename T::response_type>;
+    	/// the framework must implement a function to handle ill formed requests
+	    { T::on_ill_formed_request(typename T::request_type("")) } -> std::same_as<void>;
     	/// the framework must implement a function to handle caught exceptions
 	    { T::on_exception(typename T::request_type(""), std::exception()) } -> std::same_as<typename T::response_type>;
     	/// the framework must implement a function to handle caught unknown exceptions

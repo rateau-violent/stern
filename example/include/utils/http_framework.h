@@ -30,6 +30,10 @@ namespace example {
             return http::response{http::error::not_found{}}.complete(req);
         }
 
+        static void on_ill_formed_request(const request_type& req) {
+            throw http::error::bad_request{};
+        }
+
         static response_type on_exception(const request_type& req, const std::exception& e) {
             std::cerr << "ERROR: " << e.what() << std::endl;
             if (auto* http_error = dynamic_cast<const http::error::error*>(&e); http_error != nullptr) {
