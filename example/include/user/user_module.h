@@ -1,8 +1,7 @@
 #ifndef EXAMPLE_USER_MODULE_H
 #define EXAMPLE_USER_MODULE_H
 
-#include "utils.h"
-#include "user_controller.h"
+#include "utils/utils.h"
 
 namespace example {
     class user_module: public module {

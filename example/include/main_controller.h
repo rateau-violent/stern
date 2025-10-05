@@ -1,7 +1,7 @@
 #ifndef EXAMPLE_MAIN_CONTROLLER_H
 #define EXAMPLE_MAIN_CONTROLLER_H
 
-#include "utils.h"
+#include "utils/utils.h"
 
 namespace example {
     class main_controller: public controller {
