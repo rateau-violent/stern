@@ -4,7 +4,7 @@ namespace example {
 
     main_controller::main_controller(): controller_base("/") {
         emplace_routes({
-          { "", http::methods::GET, [this](const http::request& req) { return _basic_get(req); }}
+          { "", http::methods::GET, [this](const http::request& req) { return _basic_get(req).complete(req); }}
         });
     }
 
