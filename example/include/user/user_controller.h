@@ -1,7 +1,7 @@
 #ifndef EXAMPLE_USER_CONTROLLER_H
 #define EXAMPLE_USER_CONTROLLER_H
 
-#include "utils.h"
+#include "utils/utils.h"
 #include "user/user_dto.h"
 
 namespace example {
