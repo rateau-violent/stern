@@ -32,6 +32,19 @@ namespace example {
         static response_type not_found(const request_type& req) {
             return http::response{http::error::not_found{}}.complete(req);
         }
+
+        static response_type on_exception(const request_type& req, const std::exception& e) {
+            std::cerr << "ERROR: " << e.what() << std::endl;
+            if (auto* http_error = dynamic_cast<const http::error::error*>(&e); http_error != nullptr) {
+                return http::response{*http_error}.complete(req);
+            }
+            return http::response{http::error::internal_server_error{}}.complete(req);
+        }
+
+        static response_type on_unknown_exception(const request_type& req) {
+            std::cerr << "ERROR: Unknown error" << std::endl;
+            return http::response{http::error::internal_server_error{}}.complete(req);
+        }
     };
 }
 
