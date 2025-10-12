@@ -1,9 +1,11 @@
+#include <iostream>
+
 #include "user/user_controller.h"
 
 
 namespace example {
     user_controller::user_controller(): controller("/users"), _users{} {
-        emplace_route<user_id>("", http::methods::GET, [this](const auto&req, const auto& query) {
+        emplace_route<std::optional<user_id>>("", http::methods::GET, [this](const auto&req, const auto& query) {
             return _get_users(req, query).complete(req);
         });
         emplace_route<user_dto>("", http::methods::POST, [this] (const auto& req, const auto& body) {
@@ -17,12 +19,16 @@ namespace example {
         });
     }
 
-    http::response user_controller::_get_users(const http::request& req, const user_id& query) const {
-        std::cout << "GET USER " << query.id << std::endl;
-        if (query.id >= _users.size()) {
+    http::response user_controller::_get_users(const http::request& req, const std::optional<user_id>& query) const {
+        if (!query.has_value()) {
+            return http::response{http::codes::OK, http::body_type{rfl::json::write(_users)}};
+        }
+        auto id = query.value().id;
+        std::cout << "GET USER " << id << std::endl;
+        if (id >= _users.size()) {
             throw http::error::not_found();
         }
-        return http::response{http::codes::OK, http::body_type{rfl::json::write(_users[query.id])}};
+        return http::response{http::codes::OK, http::body_type{rfl::json::write(_users[id])}};
     }
 
     http::response user_controller::_post_user(const http::request& req, const user_dto& user) {

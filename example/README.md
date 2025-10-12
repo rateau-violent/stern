@@ -13,13 +13,13 @@ The [main_module](./include/main_module.h) holds:
 ### Available routes
 The example implements a few routes:
 
-|  Method  |   Path    | Parameters  | Description                              |
-|:--------:|:---------:|:-----------:|------------------------------------------|
-|  `GET`   |     /     |      -      | Heartbeat route, always returns 200 (OK) |
-|  `GET`   |  /users/  |    Query    | Retrieves a user from its id             |
-|  `POST`  |  /users/  |    Body     | Creates a new user                       |
-|  `PUT`   |  /users/  | Query, Body | Updates a user's data from its id        |
-| `DELETE` |  /users/  |    Query    | Deletes a user                           |
+|  Method  |   Path    |    Parameters    | Description                                                                                      |
+|:--------:|:---------:|:----------------:|--------------------------------------------------------------------------------------------------|
+|  `GET`   |     /     |        -         | Heartbeat route, always returns 200 (OK).                                                        |
+|  `GET`   |  /users/  | Query (optional) | If no query parameter, retrieves the list of all users. Otherwise, retrieves a user from its id. |
+|  `POST`  |  /users/  |       Body       | Creates a new user.                                                                              |
+|  `PUT`   |  /users/  |   Query, Body    | Updates a user's data from its id.                                                               |
+| `DELETE` |  /users/  |      Query       | Deletes a user.                                                                                  |
 
 ## How to run
 

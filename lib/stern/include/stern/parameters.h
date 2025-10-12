@@ -4,6 +4,7 @@
 #include <rfl.hpp>
 #include <rfl/json.hpp>
 
+#include "parameters.h"
 #include "stern/framework.h"
 
 namespace stern::parameter {
@@ -30,6 +31,16 @@ namespace stern::parameter {
     concept QueryParameter = std::is_base_of_v<query, T>;
 
     /**
+     * @brief Concept for optional query parameters
+     */
+    template<typename T>
+    concept OptionalQueryParameter = requires {
+        typename T::value_type;
+    } &&
+    std::same_as<T, std::optional<typename T::value_type>> &&
+    QueryParameter<typename T::value_type>;
+
+    /**
      * @brief Concept for body parameters
      */
     template<typename T>
@@ -45,7 +56,7 @@ namespace stern::parameter {
      * @brief Concept for route parameters
      */
     template<typename T>
-    concept RouteParameter = QueryParameter<T> || BodyParameter<T> || UriParameter<T>;
+    concept RouteParameter = QueryParameter<T> || OptionalQueryParameter<T> || BodyParameter<T> || UriParameter<T>;
 
     /**
      * @brief Transforms any Route parameter (query parameter, body parameter or uri parameter) into a representative
@@ -65,6 +76,26 @@ namespace stern::parameter {
             } catch (...) {
                 F::on_ill_formed_request(req);
                 return P{};
+            }
+        }
+
+        /**
+         * @brief Transforms an optional query parameter into an std::optional of a representative structure
+         *
+         * If the Framework::query_to_json() method returns an empty string, the function returns a std::nullopt.
+         * Otherwise, the function returns a std::optional of a representative structure.
+         */
+        template<OptionalQueryParameter P>
+        static P transform(const request_type& req) {
+            std::string query = F::query_to_json(req);
+            if (query.empty()) {
+                return std::nullopt;
+            }
+            try {
+                return rfl::json::read<P>(query).value();
+            } catch (...) {
+                F::on_ill_formed_request(req);
+                return std::nullopt;
             }
         }
 
