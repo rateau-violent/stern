@@ -4,7 +4,6 @@
 #include <rfl.hpp>
 #include <rfl/json.hpp>
 
-#include "parameters.h"
 #include "stern/framework.h"
 
 namespace stern::parameter {

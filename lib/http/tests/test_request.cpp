@@ -2,8 +2,6 @@
 
 #include <http/request.h>
 
-#include <iostream>
-
 Test(request, get_request_create_from_string) {
     const std::string request_str{
         "GET / HTTP/1.1\r\n"
