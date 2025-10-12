@@ -18,7 +18,7 @@ namespace example {
 
             std::vector<user> _users;
 
-            http::response _get_users(const http::request& req, const user_id&) const;
+            http::response _get_users(const http::request& req, const std::optional<user_id>&) const;
             http::response _post_user(const http::request& req, const user_dto& user);
             http::response _delete_user(const http::request& req, const user_id&);
             http::response _update_user(const http::request& req, const user_id&, const user_dto&);
