@@ -171,7 +171,7 @@ emplace_route<user_dto>("", http::methods::POST, [this] (const auto& req, const 
 
 ##### Additional optional parameter
 
-For routes that take an optional parameter, you must specify that the parameter is optional wen adding the route:
+For routes that take an optional parameter, you must specify that the parameter is optional when adding the route:
 ```c++
 emplace_route<std::optional<user_id>>("", http::methods::GET, [this](const auto&req, const auto& query) {
     return _get_users(req, query).complete(req);
