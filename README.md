@@ -72,7 +72,7 @@ Your routes can also take additional parameters:
 
 #### Body parameter
 
-Routes can take body structure parameter, that will retrieve the request's body and reflect it as a structure.
+Routes can take a body structure parameter, that will retrieve the request's body and reflect it as a structure.
 
 Definition example of a body parameter:
 ```c++
@@ -86,13 +86,37 @@ The structure **MUST** inherit from the `stern::parameter::body` class.
 
 This parameter can then be used by a route:
 ```c++
-http::response user_controller::_post_user(const http::request& req, const user_dto& user) {
+http::response user_controller::_post_user(const http::request& req, const user_dto& body) {
     // Your implementation here
 }
 ```
 
 #### Query parameters
-:construction: Work in progress :construction:
+Routes can also take a query structure parameter, that will retrieve the request's query and reflect it as a structure.
+
+Definition example of a query parameter:
+```c++
+ struct user_id: stern::parameter::query {
+     std::size_t id;
+ };
+```
+The structure **MUST** inherit from the `stern::parameter::query` class.
+
+##### Required query parameter
+When the query parameter is required by the route, it should be used this way:
+```c++
+http::response user_controller::_delete_user(const http::request& req, const user_id& query) {
+    // Your implementation here
+}
+```
+
+##### Optional query parameter
+When the query parameter is optional, the parameter should be an `std::optional` templated on the query's type:
+```c++
+http::response user_controller::_get_users(const http::request& req, const std::optional<user_id>& query) const {
+    // Your implementation here
+}
+```
 
 #### Uri parameters
 :construction: Work in progress :construction:
@@ -142,6 +166,15 @@ types and parameters when adding the route:
 ```c++
 emplace_route<user_dto>("", http::methods::POST, [this] (const auto& req, const auto& body) {
     return _post_user(req, body);
+});
+```
+
+##### Additional optional parameter
+
+For routes that take an optional parameter, you must specify that the parameter is optional wen adding the route:
+```c++
+emplace_route<std::optional<user_id>>("", http::methods::GET, [this](const auto&req, const auto& query) {
+    return _get_users(req, query).complete(req);
 });
 ```
 
