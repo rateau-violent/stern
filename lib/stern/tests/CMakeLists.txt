@@ -1,9 +1,9 @@
-find_package(asio REQUIRED)
+#find_package(asio REQUIRED)
 
 add_executable(stern_tests
         test_integration.cpp
 
-#        helper/test_fixture.cpp
+        helper/test_fixture.cpp
 
         ${CMAKE_SOURCE_DIR}/example/src/main_controller.cpp
         ${CMAKE_SOURCE_DIR}/example/src/main_module.cpp
@@ -19,7 +19,7 @@ target_link_libraries(stern_tests
     http
     stern
     ${CRITERION_LIBRARIES}
-    asio::asio
+#    asio::asio
 )
 
 add_test(NAME stern_tests COMMAND stern_tests)
