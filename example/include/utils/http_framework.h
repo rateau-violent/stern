@@ -3,6 +3,8 @@
 
 #include <functional>
 #include <memory>
+#include <iostream>
+#include <string>
 
 #include <http/methods.h>
 #include <http/response.h>

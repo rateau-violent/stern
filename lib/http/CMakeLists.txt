@@ -3,6 +3,8 @@ set(CMAKE_CXX_STANDARD 20)
 add_library(http STATIC
     include/http/status.h
 
+    src/utils/string_helper.cpp
+
     src/body.cpp
     src/error.cpp
     src/methods.cpp
@@ -10,7 +12,6 @@ add_library(http STATIC
     src/request.cpp
     src/response.cpp
     src/versions.cpp
-    src/utils/string_helper.cpp
 )
 
 target_include_directories(http PUBLIC

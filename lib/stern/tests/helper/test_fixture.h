@@ -1,9 +1,11 @@
 #ifndef STERN_TEST_FIXTURE_H
 #define STERN_TEST_FIXTURE_H
 
-#include "stern/stern.h"
+#include <thread>
 
 #include "utils/http_framework.h"
+
+#include <stern/server.h>
 
 class test_fixture {
     public:
