@@ -71,6 +71,10 @@ namespace stern {
              * @brief Stops the server
              */
             void stop() {
+                if (_running) {
+                    _running = false;
+                    return;
+                }
                 std::cout << std::endl << "=== STOPPING SERVER ===" << std::endl;
                 _tcp_server.stop();
                 if (_network_thread.joinable()) {
