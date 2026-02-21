@@ -5,11 +5,11 @@
 
 #include <criterion/criterion.h>
 
-void setup() {
+static void setup() {
   test_fixture::get_instance().start_server();
 }
 
-void tear_down() {
+static void tear_down() {
   test_fixture::get_instance().stop_server();
 }
 
