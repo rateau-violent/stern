@@ -259,7 +259,9 @@ cmake --build .
 ```
 
 ## Unit tests
-In order to build and run the unit tests, you must install the [criterion library](https://github.com/Snaipe/Criterion/tree/bleeding).
+In order to build and run the unit tests, you must install:
+- The [criterion library](https://github.com/Snaipe/Criterion/tree/bleeding)
+- curl libcurl4-openssl-dev packages
 
 ### Build the unit tests
 You must enable unit tests on cmake with the following command:

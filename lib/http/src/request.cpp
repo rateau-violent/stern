@@ -1,6 +1,6 @@
 #include <stdexcept>
 #include <ostream>
-
+#include <iostream>
 #include "http/request.h"
 #include "http/utils/string_helper.h"
 
@@ -18,6 +18,7 @@ namespace {
 
 namespace http {
     request::request(const std::string& request_string) {
+        std::cout << "Request = " << request_string << std::endl;
         auto lines = utils::split_string(request_string, "\r\n");
         if (lines.empty()) {
             throw std::runtime_error("Unable to parse HTTP request");
