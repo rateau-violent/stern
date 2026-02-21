@@ -1,28 +1,24 @@
-include(FetchContent)
-
-find_package(CURL REQUIRED)
+add_subdirectory(helper)
 
 add_executable(stern_tests
-        test_integration.cpp
+    test_integration.cpp
+    fixture/test_fixture.cpp
 
-        helper/test_fixture.cpp
-
-        ${CMAKE_SOURCE_DIR}/example/src/main_controller.cpp
-        ${CMAKE_SOURCE_DIR}/example/src/main_module.cpp
-        ${CMAKE_SOURCE_DIR}/example/src/user/user_controller.cpp
-        ${CMAKE_SOURCE_DIR}/example/src/user/user_module.cpp
+    ${CMAKE_SOURCE_DIR}/example/src/main_controller.cpp
+    ${CMAKE_SOURCE_DIR}/example/src/main_module.cpp
+    ${CMAKE_SOURCE_DIR}/example/src/user/user_controller.cpp
+    ${CMAKE_SOURCE_DIR}/example/src/user/user_module.cpp
 )
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/example/include
-    ${CURL_INCLUDE_DIR}
 )
 
 target_link_libraries(stern_tests
     http
     stern
     ${CRITERION_LIBRARIES}
-    ${CURL_LIBRARY}
+    stern_integration_test_helper
 )
 
 add_test(NAME stern_tests COMMAND stern_tests)
