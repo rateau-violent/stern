@@ -24,16 +24,21 @@ Test(stern_integration_tests, base, .init = setup, .fini = tear_down) {
                 {"last_name", "Doe"},
                 {"age", 42}
                 }});
-            std::cout << "___" << std::endl;
-            std::cout << "response = " << (int)res.getCode() << ": " << res.getBody().to_string() << std::endl;
+
             cr_assert_eq(res.getCode(), http::codes::CREATED);
         }
 
-        auto res = client.get("users");
+        { // get the previously created user
+            auto res = client.get("users");
 
-        std::cout << "___" << std::endl;
-        std::cout << "response = " << (int)res.getCode() << ": " << res.getBody().to_string() << std::endl;
-
+            cr_assert_eq(res.getCode(), http::codes::OK);
+            cr_assert_eq(res.getBody().is_json(), true);
+            auto body = nlohmann::json::parse(res.getBody().to_string());
+            cr_assert_eq(body[0].at("first_name"), "John");
+            cr_assert_eq(body[0].at("last_name"), "Doe");
+            cr_assert_eq(body[0].at("age"), 42);
+        }
+        
     } catch(const std::exception& e) {
         std::cerr << "ERROR: " << e.what() << std::endl;
     } catch (...) {
