@@ -47,4 +47,23 @@ Test(stern_integration_tests, base, .init = setup, .fini = tear_down) {
         cr_assert_eq(body.at("last_name"), "Doe");
         cr_assert_eq(body.at("age"), 42);
     }
+
+    { // Update user
+        auto res = client.put("users?id=0", http::body_type{nlohmann::json{
+            {"first_name", "Isabelle"},
+            {"last_name", "Durant"},
+            {"age", 84}
+        }});
+        cr_assert_eq(res.getCode(), http::codes::OK);
+    }
+
+    { // get updated user
+        auto res = client.get("users?id=0");
+        cr_assert_eq(res.getCode(), http::codes::OK);
+        cr_assert_eq(res.getBody().is_json(), true);
+        auto body = nlohmann::json::parse(res.getBody().to_string());
+        cr_assert_eq(body.at("first_name"), "Isabelle");
+        cr_assert_eq(body.at("last_name"), "Durant");
+        cr_assert_eq(body.at("age"), 84);
+    }
 }
