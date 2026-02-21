@@ -1,5 +1,5 @@
 #include "helper/client.h"
-#include "helper/test_fixture.h"
+#include "fixture/test_fixture.h"
 
 #include "stern/stern.h"
 
