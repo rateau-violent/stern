@@ -15,33 +15,36 @@ void tear_down() {
 
 Test(stern_integration_tests, base, .init = setup, .fini = tear_down) {
 
-    try {
-        tests::helper::client client("127.0.0.1", 3000);
+    tests::helper::client client("127.0.0.1", 3000);
 
-        { // post on /users route
-            auto res = client.post("users", http::body_type{nlohmann::json{
-                {"first_name", "John"},
-                {"last_name", "Doe"},
-                {"age", 42}
-                }});
+    { // post on /users route
+        auto res = client.post("users", http::body_type{nlohmann::json{
+            {"first_name", "John"},
+            {"last_name", "Doe"},
+            {"age", 42}
+            }});
 
-            cr_assert_eq(res.getCode(), http::codes::CREATED);
-        }
+        cr_assert_eq(res.getCode(), http::codes::CREATED);
+    }
 
-        { // get the previously created user
-            auto res = client.get("users");
+    { // get all created users
+        auto res = client.get("users");
 
-            cr_assert_eq(res.getCode(), http::codes::OK);
-            cr_assert_eq(res.getBody().is_json(), true);
-            auto body = nlohmann::json::parse(res.getBody().to_string());
-            cr_assert_eq(body[0].at("first_name"), "John");
-            cr_assert_eq(body[0].at("last_name"), "Doe");
-            cr_assert_eq(body[0].at("age"), 42);
-        }
-        
-    } catch(const std::exception& e) {
-        std::cerr << "ERROR: " << e.what() << std::endl;
-    } catch (...) {
-        std::cerr << "Unknown error" << std::endl;
+        cr_assert_eq(res.getCode(), http::codes::OK);
+        cr_assert_eq(res.getBody().is_json(), true);
+        auto body = nlohmann::json::parse(res.getBody().to_string());
+        cr_assert_eq(body[0].at("first_name"), "John");
+        cr_assert_eq(body[0].at("last_name"), "Doe");
+        cr_assert_eq(body[0].at("age"), 42);
+    }
+
+    { // get one particular user
+        auto res = client.get("users?id=0");
+        cr_assert_eq(res.getCode(), http::codes::OK);
+        cr_assert_eq(res.getBody().is_json(), true);
+        auto body = nlohmann::json::parse(res.getBody().to_string());
+        cr_assert_eq(body.at("first_name"), "John");
+        cr_assert_eq(body.at("last_name"), "Doe");
+        cr_assert_eq(body.at("age"), 42);
     }
 }

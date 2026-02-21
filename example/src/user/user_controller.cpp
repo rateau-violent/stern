@@ -2,7 +2,6 @@
 
 #include "user/user_controller.h"
 
-
 namespace example {
     user_controller::user_controller(): controller("/users"), _users{} {
         emplace_route<std::optional<user_id>>("", http::methods::GET, [this](const auto&req, const auto& query) {
