@@ -16,6 +16,7 @@ namespace tests::helper {
 
             [[nodiscard]] http::response get(const std::string& path) const;
             [[nodiscard]] http::response post(const std::string& path, const http::body_type& body) const;
+            [[nodiscard]] http::response put(const std::string& path, const http::body_type& body) const;
 
         private:
             std::string _ip;
