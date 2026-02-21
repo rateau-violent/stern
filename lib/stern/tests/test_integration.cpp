@@ -5,7 +5,6 @@
 
 #include <criterion/criterion.h>
 
-
 void setup() {
     test_fixture::get_instance().start_server();
 }
@@ -15,9 +14,17 @@ void tear_down() {
 }
 
 Test(stern_integration_tests, base, .init = setup, .fini = tear_down) {
-    tests::helper::tcp_client client("localhost:3000");
 
-    auto res = client.send("GET / HTTP/1.1\r\n"
-        "Host: localhost:3000\r\n"
-        "\r\n");
+    try {
+        tests::helper::client client("127.0.0.1", 3000);
+        auto res = client.get("/users");
+
+        std::cout << "___" << std::endl;
+        std::cout << "response = " << (int)res.getCode() << ": " << res.getBody().to_string() << std::endl;
+
+    } catch(const std::exception& e) {
+        std::cerr << "ERROR: " << e.what() << std::endl;
+    } catch (...) {
+        std::cerr << "Unknown error" << std::endl;
+    }
 }

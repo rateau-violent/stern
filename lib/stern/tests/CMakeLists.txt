@@ -1,4 +1,6 @@
-#find_package(asio REQUIRED)
+include(FetchContent)
+
+find_package(CURL REQUIRED)
 
 add_executable(stern_tests
         test_integration.cpp
@@ -13,13 +15,14 @@ add_executable(stern_tests
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/example/include
+    ${CURL_INCLUDE_DIR}
 )
 
 target_link_libraries(stern_tests
     http
     stern
     ${CRITERION_LIBRARIES}
-#    asio::asio
+    ${CURL_LIBRARY}
 )
 
 add_test(NAME stern_tests COMMAND stern_tests)

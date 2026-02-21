@@ -22,7 +22,7 @@ void test_fixture::start_server() {
         get_server().start();
     });
     // mandatory sleep to let the server start properly
-    sleep(2);
+    sleep(1);
 }
 
 void test_fixture::stop_server() {
