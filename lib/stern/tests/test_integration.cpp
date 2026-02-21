@@ -17,7 +17,19 @@ Test(stern_integration_tests, base, .init = setup, .fini = tear_down) {
 
     try {
         tests::helper::client client("127.0.0.1", 3000);
-        auto res = client.get("/users");
+
+        { // post on /users route
+            auto res = client.post("users", http::body_type{nlohmann::json{
+                {"first_name", "John"},
+                {"last_name", "Doe"},
+                {"age", 42}
+                }});
+            std::cout << "___" << std::endl;
+            std::cout << "response = " << (int)res.getCode() << ": " << res.getBody().to_string() << std::endl;
+            cr_assert_eq(res.getCode(), http::codes::CREATED);
+        }
+
+        auto res = client.get("users");
 
         std::cout << "___" << std::endl;
         std::cout << "response = " << (int)res.getCode() << ": " << res.getBody().to_string() << std::endl;

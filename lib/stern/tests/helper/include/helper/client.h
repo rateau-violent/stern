@@ -7,16 +7,22 @@ namespace tests::helper {
     class client {
         public:
 
-            explicit client(const std::string& ip, std::size_t port, const std::string& logfile = "/dev/null");
+            /**
+             *  Creates a client object
+             *  @param [in] ip the server's ip
+             *  @param [in] port the server's port
+             */
+            explicit client(const std::string& ip, std::size_t port);
 
             [[nodiscard]] http::response get(const std::string& path) const;
+            [[nodiscard]] http::response post(const std::string& path, const http::body_type& body) const;
 
         private:
             std::string _ip;
             std::size_t _port;
-            std::string _logfile;
 
-            static std::size_t get_response_content(void *contents, std::size_t size, std::size_t nmemb, std::string *s);
+            std::string compute_url(const std::string& path) const;
+
     };
 }
 
