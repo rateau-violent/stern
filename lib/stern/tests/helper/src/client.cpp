@@ -12,6 +12,13 @@ namespace {
         s->append(static_cast<char*>(contents), newLength);
         return newLength;
     }
+
+    std::string make_curl_error(const std::string& fct_name, CURLcode code) {
+        std::stringstream ss;
+
+        ss << "Curl error: " << fct_name << "() failed:" << curl_easy_strerror(code) << ".";
+        return ss.str();
+    }
 }
 
 namespace tests::helper {
@@ -25,9 +32,7 @@ namespace tests::helper {
 
         CURLcode result = curl_global_init(CURL_GLOBAL_ALL);
         if(result != CURLE_OK) {
-            std::stringstream ss;
-            ss << "Curl error: curl_global_init() failed:" << curl_easy_strerror(result) << ".";
-            throw std::runtime_error{ss.str()};
+            throw std::runtime_error{make_curl_error("curl_global_init", result)};
         }
 
         curl = curl_easy_init();
@@ -42,9 +47,7 @@ namespace tests::helper {
             result = curl_easy_perform(curl);
             /* Check for errors */
             if(result != CURLE_OK) {
-                std::stringstream ss;
-                ss << "Curl error: " << "curl_easy_perform() failed:" << curl_easy_strerror(result);
-                throw std::runtime_error{ss.str()};
+                throw std::runtime_error{make_curl_error("curl_easy_perform", result)};
             }
 
             curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
@@ -63,9 +66,7 @@ namespace tests::helper {
 
         CURLcode result = curl_global_init(CURL_GLOBAL_ALL);
         if(result != CURLE_OK){
-            std::stringstream ss;
-            ss << "Curl error: " << "curl_global_init() failed:" << curl_easy_strerror(result);
-            throw std::runtime_error{ss.str()};
+            throw std::runtime_error{make_curl_error("curl_global_init", result)};
         }
 
         /* get a curl handle */
@@ -97,9 +98,7 @@ namespace tests::helper {
             result = curl_easy_perform(curl);
             /* Check for errors */
             if(result != CURLE_OK) {
-                std::stringstream ss;
-                ss << "Curl error: " << "curl_easy_perform() failed:" << curl_easy_strerror(result);
-                throw std::runtime_error{ss.str()};
+                throw std::runtime_error{make_curl_error("curl_easy_perform", result)};
             }
 
             curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
@@ -115,6 +114,5 @@ namespace tests::helper {
     std::string client::compute_url(const std::string& path) const {
         return "http://" + _ip + ":" + std::to_string(_port) + "/" + path;
     }
-
 
 }

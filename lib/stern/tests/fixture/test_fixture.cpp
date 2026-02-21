@@ -2,14 +2,10 @@
 
 #include "stern/stern.h"
 
-// #include "utils/http_framework.h"
 #include "utils/utils.h"
-
-// #include "http/http.h"
 
 #include <main_module.h>
 
-// #include <criterion/criterion.h>
 
 test_fixture& test_fixture::get_instance() {
     static test_fixture helper;
