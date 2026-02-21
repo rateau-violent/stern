@@ -25,7 +25,7 @@ namespace {
                 curl_global_cleanup();
             }
 
-            void get(const std::string& url, long& response_code, std::string& response_content) {
+            void get(const std::string& url, long& response_code, std::string& response_content) const {
                 curl_easy_setopt(_curl, CURLOPT_URL, url.c_str());
 
                 fill_response_content(response_content);
@@ -35,14 +35,14 @@ namespace {
                 curl_easy_getinfo(_curl, CURLINFO_RESPONSE_CODE, &response_code);
             }
 
-            void post(const std::string& url, const http::body_type& body, long& response_code, std::string& response_content) {
+            void post(const std::string& url, const http::body_type& body, long& response_code, std::string& response_content) const {
                 curl_easy_setopt(_curl, CURLOPT_URL, url.c_str());
 
-                std::size_t body_len;
-                char* body_str = copy_request_body(body, body_len);
+                std::size_t content_len;
+                char* raw_content = copy_request_body(body, content_len);
 
                 /* Now specify the POST data */
-                curl_easy_setopt(_curl, CURLOPT_POSTFIELDS, body_str);
+                curl_easy_setopt(_curl, CURLOPT_POSTFIELDS, raw_content);
 
                 /* Specify headers */
                 specify_headers({
@@ -55,6 +55,32 @@ namespace {
                 make_request();
 
                 curl_easy_getinfo(_curl, CURLINFO_RESPONSE_CODE, &response_code);
+                free(raw_content);
+            }
+
+            void put(const std::string& url, const http::body_type& body, long& response_code, std::string& response_content) const {
+
+                curl_easy_setopt(_curl, CURLOPT_CUSTOMREQUEST, "PUT");
+                curl_easy_setopt(_curl, CURLOPT_URL, url.c_str());
+
+
+                std::size_t content_len;
+                char* raw_content = copy_request_body(body, content_len);
+
+                /* Now specify the PUT data */
+                curl_easy_setopt(_curl, CURLOPT_POSTFIELDS, raw_content);
+
+                /* Specify headers */
+                specify_headers({
+                    {"Content-Length", std::to_string(body.size() + 2)},
+                    {"Content-Type", body.is_json() ? "application/json" : "text/html; charset=UTF-8"}
+                });
+
+                fill_response_content(response_content);
+
+                make_request();
+                curl_easy_getinfo(_curl, CURLINFO_RESPONSE_CODE, &response_code);
+                free(raw_content);
             }
 
         private:
@@ -129,6 +155,16 @@ namespace tests::helper {
         std::string url = compute_url(path);
 
         curl.post(url, body, response_code, response_content);
+        return http::response{static_cast<http::codes>(response_code), response_content};
+    }
+
+    http::response client::put(const std::string& path, const http::body_type& body) const {
+        long response_code;
+        std::string response_content;
+        Curler curl;
+        std::string url = compute_url(path);
+
+        curl.put(url, body, response_code, response_content);
         return http::response{static_cast<http::codes>(response_code), response_content};
     }
 
