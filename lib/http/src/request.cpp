@@ -12,8 +12,7 @@ namespace {
         for (const auto& s: std::ranges::views::filter(split_path, [](const auto& s){ return s.empty() == false; })) {
             clean_path += "/" + s;
         }
-        std::cout << "clean_path = " << clean_path << std::endl;
-        return clean_path;
+        return clean_path.empty() ? "/" : clean_path;
     }
 
     void parse_url(const std::string& url, std::string& path, http::query_type& query) {
