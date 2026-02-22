@@ -5,15 +5,14 @@
 
 #include <criterion/criterion.h>
 
-static void tear_down() {
-  test_fixture::get_instance().stop_server();
+static void setup() {
+  test_fixture::get_instance().start_server();
 }
 
-static void setup() {
-  try {
-    test_fixture::get_instance().start_server();
-  } catch(...) {
-  }
+static void tear_down() {
+  test_fixture::get_instance().stop_server();
+  // mandatory sleep when multiple tests
+  sleep(1);
 }
 
 
