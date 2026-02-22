@@ -31,4 +31,4 @@ function(add_example_api_test)
 endfunction()
 
 add_example_api_test(NAME users FILES ${CMAKE_CURRENT_SOURCE_DIR}/test_users.cpp)
-#add_example_api_test(NAME path FILES ${CMAKE_CURRENT_SOURCE_DIR}/test_path.cpp)
+add_example_api_test(NAME heartbeat FILES ${CMAKE_CURRENT_SOURCE_DIR}/test_heartbeat.cpp)
