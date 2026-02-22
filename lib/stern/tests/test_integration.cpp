@@ -1,20 +1,26 @@
-#include "helper/client.h"
-#include "fixture/test_fixture.h"
+#include "tests/http_client.h"
+#include "tests/fixture.h"
 
 #include "stern/stern.h"
 
 #include <criterion/criterion.h>
+#include <main_module.h>
+#include <utils/http_framework.h>
+
+
+using http_framework = example::http_framework;
+using fixture_type = tests::fixture<http_framework>;
 
 static void setup() {
-  test_fixture::get_instance().start_server();
+  fixture_type::get_instance(example::main_module()).start_server();
 }
 
 static void tear_down() {
-  test_fixture::get_instance().stop_server();
+  fixture_type::get_instance(example::main_module()).stop_server();
 }
 
 Test(stern_integration_tests, base, .init = setup, .fini = tear_down) {
-  tests::helper::client client("127.0.0.1", 3000);
+  tests::http_client client("127.0.0.1", 3000);
 
   { // create a new user
     auto res = client.post("users", http::body_type{

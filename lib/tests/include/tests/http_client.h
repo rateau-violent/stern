@@ -3,18 +3,18 @@
 
 #include <http/response.h>
 
-namespace tests::helper {
+namespace tests {
 /**
  * Client that makes basic http requests
  */
-class client {
+class http_client {
 public:
   /**
-   *  Creates a client object
+   *  Creates a http_client object
    *  @param [in] ip the server's ip
    *  @param [in] port the server's port
    */
-  explicit client(const std::string& ip, std::size_t port);
+  explicit http_client(const std::string& ip, std::size_t port);
 
   /**
    * Sends a http GET request to the server
