@@ -21,28 +21,28 @@ static void tear_down() {
   sleep(1);
 }
 
-Test(stern_integration_tests, get, .init = setup, .fini = tear_down) {
+Test(example_heartbeat_tests, get, .init = setup, .fini = tear_down) {
   tests::http_client client("127.0.0.1", 3000);
 
   auto res = client.get("/");
   cr_assert_eq(res.getCode(), http::codes::OK);
 }
 
-Test(stern_integration_tests, post, .init = setup, .fini = tear_down) {
+Test(example_heartbeat_tests, post, .init = setup, .fini = tear_down) {
   tests::http_client client("127.0.0.1", 3000);
 
   auto res = client.post("/", http::body_type{nlohmann::json::object()});
   cr_assert_eq(res.getCode(), http::codes::NOT_FOUND);
 }
 
-Test(stern_integration_tests, put, .init = setup, .fini = tear_down) {
+Test(example_heartbeat_tests, put, .init = setup, .fini = tear_down) {
   tests::http_client client("127.0.0.1", 3000);
 
   auto res = client.put("/", http::body_type{nlohmann::json::object()});
   cr_assert_eq(res.getCode(), http::codes::NOT_FOUND);
 }
 
-Test(stern_integration_tests, delete, .init = setup, .fini = tear_down) {
+Test(example_heartbeat_tests, delete, .init = setup, .fini = tear_down) {
   tests::http_client client("127.0.0.1", 3000);
 
   auto res = client.del("/");
