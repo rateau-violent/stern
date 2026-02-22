@@ -17,6 +17,7 @@ static void setup() {
 
 static void tear_down() {
   fixture_type::get_instance(example::main_module()).stop_server();
+  sleep(1);
 }
 
 Test(stern_integration_tests, get, .init = setup, .fini = tear_down) {
