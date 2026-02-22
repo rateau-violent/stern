@@ -5,10 +5,21 @@
 #include "http/utils/string_helper.h"
 
 namespace {
+
+    std::string cleanup_path(const std::string& raw_path) {
+        std::string clean_path;
+        auto split_path = http::utils::split_string(raw_path, "/");
+        for (const auto& s: std::ranges::views::filter(split_path, [](const auto& s){ return s.empty() == false; })) {
+            clean_path += "/" + s;
+        }
+        std::cout << "clean_path = " << clean_path << std::endl;
+        return clean_path;
+    }
+
     void parse_url(const std::string& url, std::string& path, http::query_type& query) {
         const std::vector<std::string> url_split = http::utils::split_string(url, "?");
 
-        path = url_split[0];
+        path = cleanup_path(url_split[0]);
         if (url_split.size() < 2) {
             return;
         }
