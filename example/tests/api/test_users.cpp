@@ -1,11 +1,12 @@
-#include "tests/http_client.h"
-#include "tests/fixture.h"
-
-#include "stern/stern.h"
-
 #include <criterion/criterion.h>
-#include <main_module.h>
-#include <utils/http_framework.h>
+
+#include <tests/http_client.h>
+#include <tests/fixture.h>
+
+#include <stern/stern.h>
+
+#include "main_module.h"
+#include "utils/http_framework.h"
 
 
 using http_framework = example::http_framework;
@@ -39,6 +40,8 @@ Test(stern_integration_tests, base, .init = setup, .fini = tear_down) {
     cr_assert_eq(res.getCode(), http::codes::OK);
     cr_assert_eq(res.getBody().is_json(), true);
     auto body = nlohmann::json::parse(res.getBody().to_string());
+    cr_assert_eq(body.is_array(), true);
+    cr_assert_eq(body.size(), 1);
     cr_assert_eq(body[0].at("first_name"), "John");
     cr_assert_eq(body[0].at("last_name"), "Doe");
     cr_assert_eq(body[0].at("age"), 42);
