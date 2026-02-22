@@ -33,6 +33,7 @@ public:
   void stop_server() {
     sleep(1);
     _server_instance.stop();
+    sleep(1);
     _server_thread.request_stop();
   }
 
