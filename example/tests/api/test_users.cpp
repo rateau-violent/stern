@@ -20,7 +20,7 @@ static void tear_down() {
   fixture_type::get_instance(example::main_module()).stop_server();
 }
 
-Test(stern_integration_tests, base, .init = setup, .fini = tear_down) {
+Test(example_user_tests, base, .init = setup, .fini = tear_down) {
   tests::http_client client("127.0.0.1", 3000);
 
   { // create a new user
@@ -89,5 +89,73 @@ Test(stern_integration_tests, base, .init = setup, .fini = tear_down) {
     cr_assert_eq(res.getBody().is_json(), true);
     auto body = nlohmann::json::parse(res.getBody().to_string());
     cr_assert_eq(body.size(), 0);
+  }
+}
+
+Test(example_user_tests, post_body_issues, .init = setup, .fini = tear_down) {
+  tests::http_client client("127.0.0.1", 3000);
+
+  { // empty body
+    auto res = client.post("users", http::body_type(nlohmann::json::parse("{}")));
+
+    cr_assert_eq(res.getCode(), http::codes::BAD_REQUEST);
+  }
+  { // missing required field
+    auto res = client.post("users", http::body_type(nlohmann::json{
+      {"first_name", "John"},
+      {"last_name", "Doe"}
+    }));
+
+    cr_assert_eq(res.getCode(), http::codes::BAD_REQUEST);
+  }
+
+  { // additional field
+    auto res = client.post("users", http::body_type(nlohmann::json{
+      {"first_name", "John"},
+      {"last_name", "Doe"},
+      {"age", 42},
+      {"hair", "none"}
+    }));
+
+    cr_assert_eq(res.getCode(), http::codes::BAD_REQUEST);
+  }
+}
+
+Test(example_user_tests, put_body_issues, .init = setup, .fini = tear_down) {
+  tests::http_client client("127.0.0.1", 3000);
+
+  { // empty body
+    auto res = client.put("users", http::body_type(nlohmann::json::parse("{}")));
+
+    cr_assert_eq(res.getCode(), http::codes::BAD_REQUEST);
+  }
+  { // missing required field
+    auto res = client.put("users", http::body_type(nlohmann::json{
+      {"first_name", "John"},
+      {"last_name", "Doe"}
+    }));
+
+    cr_assert_eq(res.getCode(), http::codes::BAD_REQUEST);
+  }
+
+  { // additional field
+    auto res = client.put("users", http::body_type(nlohmann::json{
+      {"first_name", "John"},
+      {"last_name", "Doe"},
+      {"age", 42},
+      {"hair", "none"}
+    }));
+
+    cr_assert_eq(res.getCode(), http::codes::BAD_REQUEST);
+  }
+}
+
+Test(example_user_tests, delete_query_issues, .init = setup, .fini = tear_down) {
+  tests::http_client client("127.0.0.1", 3000);
+
+  { // missing query param
+    auto res = client.del("users");
+
+    cr_assert_eq(res.getCode(), http::codes::BAD_REQUEST);
   }
 }
