@@ -102,3 +102,53 @@ Test(request, query_parameter_with_negative_number) {
 
     cr_assert_eq(req.query.to_string(), nlohmann::to_string(nlohmann::json::parse(R"({"tooth":-1})")));
 }
+
+
+Test(request, path_with_multiple_slashes_before) {
+    const std::string request_str{
+        "GET ///////users HTTP/1.1\r\n"
+        "Host: localhost:3000\r\n"
+        "\r\n"
+    };
+
+    const http::request req(request_str);
+
+    cr_assert_eq(req.path, "/users");
+
+}
+
+Test(request, path_with_multiple_slashes_after) {
+    const std::string request_str{
+        "GET /users//////// HTTP/1.1\r\n"
+        "Host: localhost:3000\r\n"
+        "\r\n"
+    };
+
+    const http::request req(request_str);
+
+    cr_assert_eq(req.path, "/users");
+}
+
+Test(request, path_with_multiple_slashes_in_the_middle) {
+    const std::string request_str{
+        "GET //random////path//to/somewhere////// HTTP/1.1\r\n"
+        "Host: localhost:3000\r\n"
+        "\r\n"
+    };
+
+    const http::request req(request_str);
+
+    cr_assert_eq(req.path, "/random/path/to/somewhere");
+}
+
+Test(request, path_without_any_slash) {
+    const std::string request_str{
+        "GET users HTTP/1.1\r\n"
+        "Host: localhost:3000\r\n"
+        "\r\n"
+    };
+
+    const http::request req(request_str);
+
+    cr_assert_eq(req.path, "/users");
+}
