@@ -1,5 +1,3 @@
-add_subdirectory(helper)
-
 function(add_stern_test)
     set(options "")
     set(oneValueArgs "NAME")
@@ -12,7 +10,6 @@ function(add_stern_test)
 
     add_executable(${ARG_NAME}
         ${ARG_FILES}
-        fixture/test_fixture.cpp
         ${CMAKE_SOURCE_DIR}/example/src/main_controller.cpp
         ${CMAKE_SOURCE_DIR}/example/src/main_module.cpp
         ${CMAKE_SOURCE_DIR}/example/src/user/user_controller.cpp
@@ -25,9 +22,9 @@ function(add_stern_test)
 
     target_link_libraries(${ARG_NAME}
         http
+        tests
         stern
         ${CRITERION_LIBRARIES}
-        stern_integration_test_helper
     )
 
     add_test(NAME stern.${ARG_NAME} COMMAND ${ARG_NAME} -j1)

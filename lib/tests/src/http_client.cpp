@@ -1,9 +1,11 @@
 #include <stdexcept>
 #include <sstream>
+#include <unordered_map>
+#include <memory>
 
 #include <curl/curl.h>
 
-#include "helper/client.h"
+#include "tests/http_client.h"
 
 namespace {
 class Curler {
@@ -142,11 +144,11 @@ private:
 };
 }
 
-namespace tests::helper {
-client::client(const std::string& ip, std::size_t port): _ip{ip}, _port{port} {
+namespace tests {
+http_client::http_client(const std::string& ip, std::size_t port): _ip{ip}, _port{port} {
 }
 
-http::response client::get(const std::string& path) const {
+http::response http_client::get(const std::string& path) const {
   long response_code;
   std::string response_content;
   auto url = compute_url(path);
@@ -157,7 +159,7 @@ http::response client::get(const std::string& path) const {
   return http::response(static_cast<http::codes>(response_code), response_content);
 }
 
-http::response client::post(const std::string& path, const http::body_type& body) const {
+http::response http_client::post(const std::string& path, const http::body_type& body) const {
   long response_code;
   std::string response_content;
   Curler curl;
@@ -167,7 +169,7 @@ http::response client::post(const std::string& path, const http::body_type& body
   return http::response{static_cast<http::codes>(response_code), response_content};
 }
 
-http::response client::put(const std::string& path, const http::body_type& body) const {
+http::response http_client::put(const std::string& path, const http::body_type& body) const {
   long response_code;
   std::string response_content;
   Curler curl;
@@ -177,7 +179,7 @@ http::response client::put(const std::string& path, const http::body_type& body)
   return http::response{static_cast<http::codes>(response_code), response_content};
 }
 
-http::response client::del(const std::string& path) const {
+http::response http_client::del(const std::string& path) const {
   long response_code;
   std::string response_content;
   Curler curl;
@@ -188,7 +190,7 @@ http::response client::del(const std::string& path) const {
 }
 
 
-std::string client::compute_url(const std::string& path) const {
+std::string http_client::compute_url(const std::string& path) const {
   return "http://" + _ip + ":" + std::to_string(_port) + "/" + path;
 }
 }
