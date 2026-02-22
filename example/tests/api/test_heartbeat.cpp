@@ -17,6 +17,7 @@ static void setup() {
 
 static void tear_down() {
   fixture_type::get_instance(example::main_module()).stop_server();
+  // make sure tests do not overlap
   sleep(1);
 }
 

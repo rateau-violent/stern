@@ -3,7 +3,6 @@
 
 #include <functional>
 #include <memory>
-#include <iostream>
 #include <string>
 
 #include <http/methods.h>
