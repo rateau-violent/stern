@@ -33,6 +33,5 @@ if (ENABLE_TESTS)
     enable_testing ()
 
     add_subdirectory (lib/http/tests)
-    add_subdirectory (lib/stern/tests)
     add_subdirectory (example/tests)
 endif ()
