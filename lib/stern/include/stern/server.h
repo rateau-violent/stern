@@ -36,7 +36,7 @@ namespace stern {
                 _port{port},
                 _main_module{std::move(main_module)},
                 _routes{_main_module.get_routes()},
-                _tcp_server{port, [this](const std::shared_ptr<network::tcp_connection>& c, const std::string& data) {
+                _tcp_server{port, [this](const std::shared_ptr<network::tcp_connection>& c, const network::packet_descriptor& data) {
                     _request_handler(c, data);
                 }} {
                 std::cout << "The following routes will be used:" << std::endl;
@@ -115,19 +115,25 @@ namespace stern {
                 return std::optional{r->second(req)};
             }
 
-            void _request_handler(const std::shared_ptr<network::tcp_connection>& c, const std::string& data) noexcept {
-                request_type req(data);
+            void _request_handler(const std::shared_ptr<network::tcp_connection>& c, const network::packet_descriptor& packet) noexcept {
+                std::string data_str;
+                data_str.assign(reinterpret_cast<char*>(packet.data), packet.size);
+                request_type req(data_str);
 
                 try {
                     if (auto res = _get_response(req); res) {
-                        c->send(std::string(res.value()));
+                        std::string res_str{res.value()};
+                        c->send({reinterpret_cast<std::uint8_t*>(res_str.data()), res_str.size()});
                     } else {
-                        c->send(std::string(F::not_found(req)));
+                        std::string res_str{F::not_found(req)};
+                        c->send({reinterpret_cast<std::uint8_t*>(res_str.data()), res_str.size()});
                     }
                 } catch (const std::exception& e) {
-                    c->send(std::string(F::on_exception(req, e)));
+                    std::string res_str{F::on_exception(req, e)};
+                    c->send({reinterpret_cast<std::uint8_t*>(res_str.data()), res_str.size()});
                 } catch (...) {
-                    c->send(std::string(F::on_unknown_exception(req)));
+                    std::string res_str{F::on_unknown_exception(req)};
+                    c->send({reinterpret_cast<std::uint8_t*>(res_str.data()), res_str.size()});
                 }
             }
 
