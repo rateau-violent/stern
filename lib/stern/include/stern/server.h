@@ -36,7 +36,7 @@ namespace stern {
                 _port{port},
                 _main_module{std::move(main_module)},
                 _routes{_main_module.get_routes()},
-                _tcp_server{port, [this](const std::shared_ptr<network::tcp_connection>& c, const network::packet_descriptor& data) {
+                _tcp_server{{port, { network::tcp_connection::config::read_strategy::READ_UNTIL, "\r\n\r\n"}}, [this](const std::shared_ptr<network::tcp_connection>& c, const network::packet_descriptor& data) {
                     _request_handler(c, data);
                 }} {
                 std::cout << "The following routes will be used:" << std::endl;

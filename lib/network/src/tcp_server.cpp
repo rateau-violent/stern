@@ -9,10 +9,10 @@
 
 
 namespace network {
-    tcp_server::tcp_server(std::size_t port, std::function<void (std::shared_ptr<tcp_connection>, const packet_descriptor&)>  packet_handler):
-        _port{port},
+    tcp_server::tcp_server(const config& conf, std::function<void (std::shared_ptr<tcp_connection>, const packet_descriptor&)>  packet_handler):
+        _conf{conf},
         _ctx{},
-        _acceptor{_ctx, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), _port)},
+        _acceptor{_ctx, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), _conf.port)},
         _packet_handler{std::move(packet_handler)} {
     }
 
@@ -30,7 +30,7 @@ namespace network {
     }
 
     void tcp_server::_start_accept() {
-        std::shared_ptr<tcp_connection> new_connection = tcp_connection::create(_ctx);
+        std::shared_ptr<tcp_connection> new_connection = tcp_connection::create(_conf.connection_config, _ctx);
 
         _acceptor.async_accept(new_connection->socket(),
             std::bind(&tcp_server::_handle_accept, this, new_connection, asio::placeholders::error));
